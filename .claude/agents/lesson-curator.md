@@ -97,9 +97,14 @@ is no `requires` field.
   for `sed` will look identical with or without `g` — pick a
   pattern/letter that actually repeats within at least one line, or the
   distinction you're trying to teach won't show up in the output.
-- Write 2-3 hints per exercise, ordered from a nudge toward the right
-  mental model to a near-complete answer, matching the existing voice in
-  sibling files.
+- Write 1-2 hints per exercise, ordered from a nudge toward the right mental
+  model to naming the specific flag/technique needed. **Never write a hint
+  that is the full literal solution command** (e.g. `grep -c 200
+  access.log`) — that hands the user the copy-pasteable answer instead of
+  teaching them to assemble it. A hint may reference syntax shape with
+  placeholders (`grep <pattern> <file>`) or name which piece changes
+  ("add -c right after grep"), but the user should still have to write the
+  actual command themselves. Match the existing voice in sibling files.
 - After adding/editing a concept file, run `npm run build` to type-check
   the JSON against `ConceptGroup`/`Exercise`, and re-verify every
   `criteria[].check` and `expectedOutput` against the exact `startFs`

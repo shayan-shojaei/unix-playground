@@ -23,7 +23,7 @@
         "build.sh": { "content": "#!/bin/sh\necho building" }
       },
       "startCwd": [],
-      "hints": ["alias <name>=<command>", "Try: alias ll=ls"],
+      "hints": ["alias <name>=<command> defines the shortcut", "Name it ll, point it at ls"],
       "criteria": [{ "id": "ll", "label": "ll is aliased to ls", "check": { "type": "state", "predicate": "aliasEquals", "name": "ll", "value": "ls" } }]
     },
     {
@@ -37,7 +37,7 @@
         "build.sh": { "content": "#!/bin/sh\necho building" }
       },
       "startCwd": [],
-      "hints": ["Same syntax, a different name and command", "Try: alias h=history"],
+      "hints": ["Same syntax, a different name and command", "Name it h, point it at history"],
       "criteria": [{ "id": "h", "label": "h is aliased to history", "check": { "type": "state", "predicate": "aliasEquals", "name": "h", "value": "history" } }]
     }
   ]

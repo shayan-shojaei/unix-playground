@@ -22,7 +22,7 @@
         "build.sh": { "content": "#!/bin/sh\necho building" }
       },
       "startCwd": [],
-      "hints": ["Add & after the command", "Try: sleep 5 &"],
+      "hints": ["Add & after the command to run it in the background", "sleep 5 is a safe command to background"],
       "criteria": [{ "id": "one-job", "label": "One job running in the background", "check": { "type": "state", "predicate": "bgJobCount", "min": 1 } }]
     },
     {
@@ -36,7 +36,7 @@
         "build.sh": { "content": "#!/bin/sh\necho building" }
       },
       "startCwd": [],
-      "hints": ["Each & starts its own job — run them one at a time", "Try: sleep 3 &", "Try: sleep 5 &"],
+      "hints": ["Each & starts its own separate job — run them one command at a time", "Any two sleep durations work, as long as they're two separate commands"],
       "criteria": [{ "id": "two-jobs", "label": "Two jobs running in the background", "check": { "type": "state", "predicate": "bgJobCount", "min": 2 } }]
     }
   ]

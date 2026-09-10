@@ -21,7 +21,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["grep produces lines, wc -l counts them", "Try: grep 200 access.log | wc -l"],
+      "hints": ["grep produces lines, wc -l counts them", "Pipe the same grep command from the previous lesson into wc -l"],
       "criteria": [{ "id": "count", "label": "Count the 200 lines via a pipe", "check": { "type": "matchOutput", "expected": "3" } }],
       "expectedOutput": "3"
     },
@@ -34,7 +34,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["cat with no filter prints the whole file", "Try: cat access.log | wc -l"],
+      "hints": ["cat with no filter prints the whole file", "Pipe that straight into wc -l — no pattern needed this time"],
       "criteria": [{ "id": "count", "label": "Count every line in access.log", "check": { "type": "matchOutput", "expected": "6" } }],
       "expectedOutput": "6"
     }

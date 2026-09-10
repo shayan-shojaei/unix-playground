@@ -23,7 +23,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["awk '{print $1}' file prints the first field of every line", "Try: awk '{print $1}' access.log"],
+      "hints": ["awk '{print $N}' <file> prints field N of every line", "The status code is the first field, so N is 1"],
       "criteria": [{ "id": "field1", "label": "Print $1 (status code) of every line", "check": { "type": "matchOutput", "expected": "200\n404\n200\n500\n200\n404" } }],
       "expectedOutput": "200\n404\n200\n500\n200\n404"
     },
@@ -36,7 +36,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["The field number goes right after the $", "Try: awk '{print $3}' access.log"],
+      "hints": ["Same command shape, just change which field number you print", "The path is the third whitespace-separated field"],
       "criteria": [{ "id": "field3", "label": "Print $3 (the path) of every line", "check": { "type": "matchOutput", "expected": "/home\n/missing\n/about\n/api/users\n/home\n/old-page" } }],
       "expectedOutput": "/home\n/missing\n/about\n/api/users\n/home\n/old-page"
     },
@@ -49,7 +49,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["print $1, $3 prints both, space-separated", "Try: awk '{print $1, $3}' access.log"],
+      "hints": ["List field numbers separated by a comma to print more than one", "Status code first, then path — in that order"],
       "criteria": [{ "id": "field1and3", "label": "Print $1 and $3 together", "check": { "type": "matchOutput", "expected": "200 /home\n404 /missing\n200 /about\n500 /api/users\n200 /home\n404 /old-page" } }],
       "expectedOutput": "200 /home\n404 /missing\n200 /about\n500 /api/users\n200 /home\n404 /old-page"
     }

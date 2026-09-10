@@ -26,7 +26,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["Pipe awk into sort", "Try: awk '{print $1}' access.log | sort"],
+      "hints": ["Pipe the same awk command from before into sort", "No flags needed — plain sort is alphabetical, which works fine for 3-digit codes"],
       "criteria": [{ "id": "sorted", "label": "Sort the status codes ascending", "check": { "type": "matchOutput", "expected": "200\n200\n200\n404\n404\n500" } }],
       "expectedOutput": "200\n200\n200\n404\n404\n500"
     },
@@ -39,7 +39,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["-r reverses the sorted order", "Try: awk '{print $1}' access.log | sort -r"],
+      "hints": ["-r reverses whatever order sort would normally produce", "Add it right after sort"],
       "criteria": [{ "id": "reversed", "label": "Sort the status codes descending", "check": { "type": "matchOutput", "expected": "500\n404\n404\n200\n200\n200" } }],
       "expectedOutput": "500\n404\n404\n200\n200\n200"
     },
@@ -52,7 +52,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["-u drops duplicates while sorting", "Try: awk '{print $1}' access.log | sort -u"],
+      "hints": ["-u drops duplicate lines while it sorts", "Add it right after sort"],
       "criteria": [{ "id": "unique", "label": "Sort with duplicates removed", "check": { "type": "matchOutput", "expected": "200\n404\n500" } }],
       "expectedOutput": "200\n404\n500"
     }

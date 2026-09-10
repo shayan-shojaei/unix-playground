@@ -21,7 +21,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["uniq alone drops the count, just collapses repeats", "Try: awk '{print $1}' access.log | sort | uniq"],
+      "hints": ["uniq alone drops the count, just collapses repeats", "Sort first, then pipe into uniq — same awk command as the last lesson"],
       "criteria": [{ "id": "collapsed", "label": "Collapse adjacent duplicate status codes", "check": { "type": "matchOutput", "expected": "200\n404\n500" } }],
       "expectedOutput": "200\n404\n500"
     },
@@ -34,7 +34,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["-c prefixes each line with its count", "Try: awk '{print $1}' access.log | sort | uniq -c"],
+      "hints": ["-c prefixes each line with its count", "Same pipeline as the last lesson, just add -c to uniq"],
       "criteria": [{ "id": "counted", "label": "Count each status code with uniq -c", "check": { "type": "matchOutput", "expected": "3 200\n2 404\n1 500" } }],
       "expectedOutput": "3 200\n2 404\n1 500"
     },
@@ -48,8 +48,8 @@
       },
       "startCwd": [],
       "hints": [
-        "awk pulls the field, sort groups duplicates together, uniq -c counts them, a final sort -n ranks by that count",
-        "Try: awk '{print $1}' access.log | sort | uniq -c | sort -n"
+        "awk pulls the field, sort groups duplicates together, uniq -c counts them — chain the three commands you already know",
+        "One more sort at the end, using -n, ranks by that count"
       ],
       "criteria": [{ "id": "ranked", "label": "Rank status codes least-to-most frequent", "check": { "type": "matchOutput", "expected": "1 500\n2 404\n3 200" } }],
       "expectedOutput": "1 500\n2 404\n3 200"

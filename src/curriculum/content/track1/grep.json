@@ -27,7 +27,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["Use grep 'pattern' file", "Try: grep 404 access.log"],
+      "hints": ["grep <pattern> <file> prints every matching line", "No flags needed here — just the pattern and the file"],
       "criteria": [{ "id": "matches", "label": "Print every line containing 404", "check": { "type": "matchOutput", "expected": "404 GET /missing\n404 GET /old-page" } }],
       "expectedOutput": "404 GET /missing\n404 GET /old-page"
     },
@@ -40,7 +40,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["-c makes grep print a count instead of the matching lines", "Try: grep -c 200 access.log"],
+      "hints": ["-c makes grep print a count instead of the matching lines", "The flag goes right after grep, before the pattern"],
       "criteria": [{ "id": "count", "label": "Print the count of 200 lines, not the lines", "check": { "type": "matchOutput", "expected": "3" } }],
       "expectedOutput": "3"
     },
@@ -53,7 +53,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["-v inverts the match", "Try: grep -v 200 access.log"],
+      "hints": ["-v inverts the match — it prints lines that DON'T match", "Same pattern as before, just add the -v flag"],
       "criteria": [{ "id": "inverted", "label": "Print every non-200 line", "check": { "type": "matchOutput", "expected": "404 GET /missing\n500 GET /api/users\n404 GET /old-page" } }],
       "expectedOutput": "404 GET /missing\n500 GET /api/users\n404 GET /old-page"
     }

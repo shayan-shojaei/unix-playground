@@ -22,7 +22,7 @@
         "build.sh": { "content": "#!/bin/sh\necho building" }
       },
       "startCwd": [],
-      "hints": ["Try: history"],
+      "hints": ["history takes no arguments — just run it"],
       "criteria": [{ "id": "ran-history", "label": "Run the history command", "check": { "type": "state", "predicate": "commandRan", "name": "history" } }]
     },
     {
@@ -36,7 +36,7 @@
         "build.sh": { "content": "#!/bin/sh\necho building" }
       },
       "startCwd": [],
-      "hints": ["Run pwd first, then history — each command you run gets appended", "Try: pwd", "Try: history"],
+      "hints": ["Run something first — anything — then check history", "pwd is a safe first command; history will show both afterward"],
       "criteria": [
         { "id": "ran-history", "label": "Run the history command", "check": { "type": "state", "predicate": "commandRan", "name": "history" } },
         { "id": "has-prior", "label": "history shows at least one earlier command plus itself", "check": { "type": "state", "predicate": "historyLength", "min": 2 } }

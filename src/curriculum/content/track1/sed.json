@@ -21,7 +21,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["sed 's/from/to/' replaces only the first match per line", "Try: sed 's/s/S/' access.log"],
+      "hints": ["sed 's/from/to/' <file> replaces only the FIRST match per line", "The letter to replace is a lowercase s, swapped for an uppercase S"],
       "criteria": [{ "id": "first-s", "label": "Replace only the first s per line", "check": { "type": "matchOutput", "expected": "200 GET /home\n404 GET /miSsing\n200 GET /about\n500 GET /api/uSers\n200 GET /home\n404 GET /old-page" } }],
       "expectedOutput": "200 GET /home\n404 GET /miSsing\n200 GET /about\n500 GET /api/uSers\n200 GET /home\n404 GET /old-page"
     },
@@ -34,7 +34,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["Add g right after the closing slash", "Try: sed 's/s/S/g' access.log"],
+      "hints": ["Add g right after the closing slash to replace every match, not just the first", "Same substitution as the last lesson, just with g appended"],
       "criteria": [{ "id": "all-s", "label": "Replace every s per line", "check": { "type": "matchOutput", "expected": "200 GET /home\n404 GET /miSSing\n200 GET /about\n500 GET /api/uSerS\n200 GET /home\n404 GET /old-page" } }],
       "expectedOutput": "200 GET /home\n404 GET /miSSing\n200 GET /about\n500 GET /api/uSerS\n200 GET /home\n404 GET /old-page"
     }

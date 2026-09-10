@@ -26,7 +26,7 @@
         "build.sh": { "content": "#!/bin/sh\necho building" }
       },
       "startCwd": [],
-      "hints": ["'*' matches any run of characters — head (unlike cat) expands globs", "Try: head *.txt"],
+      "hints": ["'*' matches any run of characters — head (unlike cat) expands globs", "*.txt matches the one file ending in .txt"],
       "criteria": [{ "id": "glob-head", "label": "Read the .txt file via a glob", "check": { "type": "matchOutput", "expected": "line one\nline two\nline three" } }],
       "expectedOutput": "line one\nline two\nline three"
     },
@@ -41,7 +41,7 @@
         "build.sh": { "content": "#!/bin/sh\necho building" }
       },
       "startCwd": [],
-      "hints": ["Same pattern idea, different command", "Try: wc -l *.csv"],
+      "hints": ["Same pattern idea, different command and extension", "wc -l counts lines; *.csv picks the file"],
       "criteria": [{ "id": "glob-wc", "label": "Count lines in the .csv file via a glob", "check": { "type": "matchOutput", "expected": "3" } }],
       "expectedOutput": "3"
     }

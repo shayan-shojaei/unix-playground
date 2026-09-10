@@ -22,7 +22,7 @@
         "build.sh": { "content": "#!/bin/sh\necho building" }
       },
       "startCwd": [],
-      "hints": ["Try: jobs"],
+      "hints": ["jobs takes no arguments — just run it"],
       "criteria": [{ "id": "ran-jobs", "label": "Run the jobs command", "check": { "type": "state", "predicate": "commandRan", "name": "jobs" } }]
     },
     {
@@ -36,7 +36,7 @@
         "build.sh": { "content": "#!/bin/sh\necho building" }
       },
       "startCwd": [],
-      "hints": ["Background it first, then check", "Try: sleep 5 &", "Try: jobs"],
+      "hints": ["Background something first, then check jobs", "Any backgrounded sleep will show up as Running"],
       "criteria": [
         { "id": "ran-jobs", "label": "Run the jobs command", "check": { "type": "state", "predicate": "commandRan", "name": "jobs" } },
         { "id": "has-job", "label": "At least one background job exists", "check": { "type": "state", "predicate": "bgJobCount", "min": 1 } }

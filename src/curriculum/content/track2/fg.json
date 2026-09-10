@@ -22,7 +22,7 @@
         "build.sh": { "content": "#!/bin/sh\necho building" }
       },
       "startCwd": [],
-      "hints": ["Try: sleep 5 &", "Try: fg %1"],
+      "hints": ["Background a job first, then bring it back with fg %<its number>", "Jobs are numbered starting at 1"],
       "criteria": [{ "id": "done", "label": "The backgrounded job finished via fg", "check": { "type": "state", "predicate": "bgJobDone" } }]
     },
     {
@@ -36,7 +36,7 @@
         "build.sh": { "content": "#!/bin/sh\necho building" }
       },
       "startCwd": [],
-      "hints": ["fg with no argument defaults to the last backgrounded job", "Try: sleep 4 &", "Try: fg"],
+      "hints": ["Background a job, then use fg with no argument at all", "Plain fg always targets the most recently backgrounded job"],
       "criteria": [{ "id": "done", "label": "The backgrounded job finished via plain fg", "check": { "type": "state", "predicate": "bgJobDone" } }]
     }
   ]

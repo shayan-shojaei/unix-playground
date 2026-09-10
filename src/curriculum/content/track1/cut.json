@@ -24,7 +24,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["cut -d<delimiter> -f<field number> — no quotes around the delimiter", "Try: cut -d, -f2 users.csv"],
+      "hints": ["cut -d<delimiter> -f<field number> <file> — no quotes around the delimiter", "The delimiter is a comma; names are the 2nd field"],
       "criteria": [{ "id": "names", "label": "Print the name column", "check": { "type": "matchOutput", "expected": "name\nada\ngrace\nalan" } }],
       "expectedOutput": "name\nada\ngrace\nalan"
     },
@@ -37,7 +37,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["Same command, just change -f to 3", "Try: cut -d, -f3 users.csv"],
+      "hints": ["Same command shape, just a different field number", "Roles are the 3rd field"],
       "criteria": [{ "id": "roles", "label": "Print the role column", "check": { "type": "matchOutput", "expected": "role\nadmin\nuser\nadmin" } }],
       "expectedOutput": "role\nadmin\nuser\nadmin"
     }

@@ -24,7 +24,7 @@
         "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["Redirects are impure — this one runs on Enter, not live-previewed", "Try: grep admin users.csv > admins.csv"],
+      "hints": ["Redirects are impure — this one runs on Enter, not live-previewed", "Grep for the pattern that matches admin rows, then send the output into a new file with >"],
       "criteria": [{ "id": "written", "label": "admins.csv contains the admin rows", "check": { "type": "state", "predicate": "fileContains", "path": "admins.csv", "substring": "admin" } }]
     },
     {
@@ -37,7 +37,7 @@
         "admins.csv": { "content": "1,ada,admin\n3,alan,admin" }
       },
       "startCwd": [],
-      "hints": ["A single > would overwrite admins.csv and lose the existing rows — use >> instead", "Try: grep grace users.csv >> admins.csv"],
+      "hints": ["A single > would overwrite admins.csv and lose the existing rows — use >> instead", "Grep for grace's row, and append rather than overwrite"],
       "criteria": [
         { "id": "preserved", "label": "The existing admin rows are still there", "check": { "type": "state", "predicate": "fileContains", "path": "admins.csv", "substring": "ada" } },
         { "id": "appended", "label": "grace's row was appended", "check": { "type": "state", "predicate": "fileContains", "path": "admins.csv", "substring": "grace" } }
