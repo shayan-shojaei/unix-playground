@@ -1,0 +1,60 @@
+{
+  "concept": "sort",
+  "track": 1,
+  "guide": {
+    "concept": "sort",
+    "description": "sort reorders its input lines. By default it sorts alphabetically; -n switches to numeric order (alphabetical would put '10' before '9'). It's most often used right before uniq, since uniq only collapses lines sitting next to each other.",
+    "syntax": "sort [options] [file]",
+    "flags": [
+      { "flag": "-n", "desc": "sort numerically instead of alphabetically" },
+      { "flag": "-r", "desc": "reverse the sort order" },
+      { "flag": "-u", "desc": "drop duplicate lines, keeping only unique ones" }
+    ],
+    "examples": [
+      { "cmd": "awk '{print $1}' access.log | sort", "output": "200\n200\n200\n404\n404\n500", "note": "alphabetical works fine here since these are all 3-digit codes" },
+      { "cmd": "awk '{print $1}' access.log | sort -r", "output": "500\n404\n404\n200\n200\n200", "note": "-r flips the order" },
+      { "cmd": "awk '{print $1}' access.log | sort -u", "output": "200\n404\n500", "note": "-u sorts and dedupes in one step" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t1-sort-1",
+      "title": "Sort lines with sort",
+      "task": "Take the status codes from access.log and sort them so identical values sit next to each other.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["Pipe awk into sort", "Try: awk '{print $1}' access.log | sort"],
+      "criteria": [{ "id": "sorted", "label": "Sort the status codes ascending", "check": { "type": "matchOutput", "expected": "200\n200\n200\n404\n404\n500" } }],
+      "expectedOutput": "200\n200\n200\n404\n404\n500"
+    },
+    {
+      "id": "t1-sort-2",
+      "title": "Reverse the order",
+      "task": "Sort the status codes again, but this time highest-first, using -r.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["-r reverses the sorted order", "Try: awk '{print $1}' access.log | sort -r"],
+      "criteria": [{ "id": "reversed", "label": "Sort the status codes descending", "check": { "type": "matchOutput", "expected": "500\n404\n404\n200\n200\n200" } }],
+      "expectedOutput": "500\n404\n404\n200\n200\n200"
+    },
+    {
+      "id": "t1-sort-3",
+      "title": "Sort and dedupe with -u",
+      "task": "Print just the distinct status codes that appear, sorted, using -u.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["-u drops duplicates while sorting", "Try: awk '{print $1}' access.log | sort -u"],
+      "criteria": [{ "id": "unique", "label": "Sort with duplicates removed", "check": { "type": "matchOutput", "expected": "200\n404\n500" } }],
+      "expectedOutput": "200\n404\n500"
+    }
+  ]
+}

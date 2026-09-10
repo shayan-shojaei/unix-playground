@@ -1,0 +1,58 @@
+{
+  "concept": "uniq",
+  "track": 1,
+  "guide": {
+    "concept": "uniq",
+    "description": "uniq collapses consecutive duplicate lines into one. It only looks at ADJACENT lines — it has no idea two matching lines exist if something else sits between them — which is exactly why you sort first. -c prefixes each remaining line with how many times it occurred.",
+    "syntax": "uniq [-c] [file]",
+    "flags": [{ "flag": "-c", "desc": "prefix each line with its occurrence count" }],
+    "examples": [
+      { "cmd": "awk '{print $1}' access.log | sort | uniq", "output": "200\n404\n500", "note": "sorted input, adjacent duplicates collapsed" },
+      { "cmd": "awk '{print $1}' access.log | sort | uniq -c", "output": "3 200\n2 404\n1 500", "note": "-c adds the count" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t1-uniq-1",
+      "title": "Collapse duplicates",
+      "task": "Extract the status codes, sort them, then collapse the adjacent duplicates with uniq.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["uniq alone drops the count, just collapses repeats", "Try: awk '{print $1}' access.log | sort | uniq"],
+      "criteria": [{ "id": "collapsed", "label": "Collapse adjacent duplicate status codes", "check": { "type": "matchOutput", "expected": "200\n404\n500" } }],
+      "expectedOutput": "200\n404\n500"
+    },
+    {
+      "id": "t1-uniq-2",
+      "title": "Count with uniq -c",
+      "task": "Same pipeline, but now also count how many times each status code occurs using -c.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["-c prefixes each line with its count", "Try: awk '{print $1}' access.log | sort | uniq -c"],
+      "criteria": [{ "id": "counted", "label": "Count each status code with uniq -c", "check": { "type": "matchOutput", "expected": "3 200\n2 404\n1 500" } }],
+      "expectedOutput": "3 200\n2 404\n1 500"
+    },
+    {
+      "id": "t1-uniq-3",
+      "title": "Put it together: rank by frequency",
+      "task": "You now know awk, sort, and uniq -c individually. Chain them, then pipe into sort -n so the codes come out ordered from least to most frequent.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": [
+        "awk pulls the field, sort groups duplicates together, uniq -c counts them, a final sort -n ranks by that count",
+        "Try: awk '{print $1}' access.log | sort | uniq -c | sort -n"
+      ],
+      "criteria": [{ "id": "ranked", "label": "Rank status codes least-to-most frequent", "check": { "type": "matchOutput", "expected": "1 500\n2 404\n3 200" } }],
+      "expectedOutput": "1 500\n2 404\n3 200"
+    }
+  ]
+}

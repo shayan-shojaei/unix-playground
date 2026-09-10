@@ -1,0 +1,45 @@
+{
+  "concept": "cut",
+  "track": 1,
+  "guide": {
+    "concept": "cut",
+    "description": "cut pulls one field out of delimiter-separated text — the tool of choice for CSV-shaped data where awk's whitespace splitting won't work. -d sets the delimiter, -f picks the field number (1-indexed, just like awk's $N). Write the delimiter right after -d with no quotes or space — this shell's tokenizer only strips quote characters when they open a word, so -d',' keeps its literal quote marks instead of stripping down to a comma.",
+    "syntax": "cut -d<delimiter> -f<field number> [file]",
+    "flags": [
+      { "flag": "-d", "desc": "the delimiter character to split on — no quotes, no space before it" },
+      { "flag": "-f", "desc": "which field to print (1-indexed)" }
+    ],
+    "examples": [
+      { "cmd": "cut -d, -f2 users.csv", "output": "name\nada\ngrace\nalan", "note": "the 2nd comma-separated field of every line" },
+      { "cmd": "cut -d, -f3 users.csv", "output": "role\nadmin\nuser\nadmin", "note": "-f3 for the 3rd field instead" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t1-cut-1",
+      "title": "Cut a CSV field",
+      "task": "Print just the names — the 2nd comma-separated field — from users.csv.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["cut -d<delimiter> -f<field number> — no quotes around the delimiter", "Try: cut -d, -f2 users.csv"],
+      "criteria": [{ "id": "names", "label": "Print the name column", "check": { "type": "matchOutput", "expected": "name\nada\ngrace\nalan" } }],
+      "expectedOutput": "name\nada\ngrace\nalan"
+    },
+    {
+      "id": "t1-cut-2",
+      "title": "Cut a different field",
+      "task": "Now print the roles — the 3rd field — from users.csv.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["Same command, just change -f to 3", "Try: cut -d, -f3 users.csv"],
+      "criteria": [{ "id": "roles", "label": "Print the role column", "check": { "type": "matchOutput", "expected": "role\nadmin\nuser\nadmin" } }],
+      "expectedOutput": "role\nadmin\nuser\nadmin"
+    }
+  ]
+}

@@ -1,25 +1,59 @@
-import type { Lesson, CheckResult } from '../curriculum/types';
+import type { LessonInstance } from '../curriculum/types';
+import type { CriterionResult } from './useLessonSession';
 
 interface LessonPanelProps {
-  lesson: Lesson;
-  check: CheckResult;
+  lesson: LessonInstance;
+  criteria: CriterionResult[];
+  statusMessage?: string;
   completed: boolean;
   hintIndex: number;
   onNext: () => void;
   hasNext: boolean;
+  preview: { stdout: string; stderr: string } | null;
 }
 
-export default function LessonPanel({ lesson, check, completed, hintIndex, onNext, hasNext }: LessonPanelProps) {
+export default function LessonPanel({
+  lesson,
+  criteria,
+  statusMessage,
+  completed,
+  hintIndex,
+  onNext,
+  hasNext,
+  preview,
+}: LessonPanelProps) {
   return (
     <div className="brief">
       <p className="brief-line brief-title">
         <span className="gutter">#</span> {lesson.title}
       </p>
-      {lesson.briefing.split(/(?<=[.!?])\s+(?=[A-Z])/).map((sentence, i) => (
-        <p className="brief-line" key={i}>
-          <span className="gutter">#</span> {sentence}
-        </p>
-      ))}
+      <p className="brief-line">
+        <span className="gutter">#</span> {lesson.task}
+      </p>
+
+      <ul className="criteria-list">
+        {criteria.map((c) => (
+          <li key={c.id} className={`criteria-item ${c.passed ? 'criteria-passed' : ''}`}>
+            <span className="criteria-check" aria-hidden="true">
+              {c.passed ? '✓' : '○'}
+            </span>
+            {c.label}
+          </li>
+        ))}
+      </ul>
+
+      {lesson.expectedOutput !== undefined && (
+        <div className="diff-panel">
+          <div className="diff-col">
+            <p className="diff-label">your output</p>
+            <pre className="diff-body">{preview ? preview.stdout || preview.stderr || ' ' : '…'}</pre>
+          </div>
+          <div className="diff-col">
+            <p className="diff-label">expected output</p>
+            <pre className="diff-body diff-expected">{lesson.expectedOutput}</pre>
+          </div>
+        </div>
+      )}
 
       {hintIndex >= 0 &&
         lesson.hints.slice(0, hintIndex + 1).map((h, i) => (
@@ -28,9 +62,9 @@ export default function LessonPanel({ lesson, check, completed, hintIndex, onNex
           </p>
         ))}
 
-      {check.message && !completed && (
+      {statusMessage && !completed && (
         <p className="brief-line brief-warn">
-          <span className="gutter">#</span> {check.message}
+          <span className="gutter">#</span> {statusMessage}
         </p>
       )}
 

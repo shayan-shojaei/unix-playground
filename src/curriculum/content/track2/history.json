@@ -1,0 +1,46 @@
+{
+  "concept": "history",
+  "track": 2,
+  "guide": {
+    "concept": "history",
+    "description": "history lists every command you've run in this session, numbered in order. It's the shell's memory — useful on its own, and the foundation for reverse-search (Ctrl+R) and the up-arrow, both of which just replay entries from this same list.",
+    "syntax": "history",
+    "flags": [],
+    "examples": [
+      { "cmd": "history", "output": "1  pwd\n2  history", "note": "numbered, in the order you ran them — including this call itself" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t2-history-1",
+      "title": "Reuse history",
+      "task": "Run 'history' now to see your session so far.",
+      "startFs": {
+        "report.txt": { "content": "line one\nline two\nline three" },
+        "report.csv": { "content": "id,amount\n1,100\n2,250" },
+        "notes.md": { "content": "meeting notes" },
+        "build.sh": { "content": "#!/bin/sh\necho building" }
+      },
+      "startCwd": [],
+      "hints": ["Try: history"],
+      "criteria": [{ "id": "ran-history", "label": "Run the history command", "check": { "type": "state", "predicate": "commandRan", "name": "history" } }]
+    },
+    {
+      "id": "t2-history-2",
+      "title": "Watch history grow",
+      "task": "Run 'pwd', then run 'history' — your previous command should now show up in the list.",
+      "startFs": {
+        "report.txt": { "content": "line one\nline two\nline three" },
+        "report.csv": { "content": "id,amount\n1,100\n2,250" },
+        "notes.md": { "content": "meeting notes" },
+        "build.sh": { "content": "#!/bin/sh\necho building" }
+      },
+      "startCwd": [],
+      "hints": ["Run pwd first, then history — each command you run gets appended", "Try: pwd", "Try: history"],
+      "criteria": [
+        { "id": "ran-history", "label": "Run the history command", "check": { "type": "state", "predicate": "commandRan", "name": "history" } },
+        { "id": "has-prior", "label": "history shows at least one earlier command plus itself", "check": { "type": "state", "predicate": "historyLength", "min": 2 } }
+      ]
+    }
+  ]
+}

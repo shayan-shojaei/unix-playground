@@ -1,0 +1,61 @@
+{
+  "concept": "grep",
+  "track": 1,
+  "guide": {
+    "concept": "grep",
+    "description": "grep scans a file (or stdin) line by line and prints every line matching a pattern. It's the tool you reach for first when you need to find something inside text — a log line, a config value, a name in a list.",
+    "syntax": "grep [options] pattern [file]",
+    "flags": [
+      { "flag": "-i", "desc": "case-insensitive match" },
+      { "flag": "-v", "desc": "invert the match — print lines that DON'T match" },
+      { "flag": "-c", "desc": "print a count of matching lines instead of the lines themselves" },
+      { "flag": "-n", "desc": "prefix each match with its line number" }
+    ],
+    "examples": [
+      { "cmd": "grep 404 access.log", "output": "404 GET /missing\n404 GET /old-page", "note": "every line containing '404'" },
+      { "cmd": "grep -v 200 access.log", "output": "404 GET /missing\n500 GET /api/users\n404 GET /old-page", "note": "-v flips it: everything except 200s" },
+      { "cmd": "grep -c 200 access.log", "output": "3", "note": "-c collapses the matches to a single count" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t1-grep-1",
+      "title": "Filter lines with grep",
+      "task": "Print every line in access.log containing '404'.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["Use grep 'pattern' file", "Try: grep 404 access.log"],
+      "criteria": [{ "id": "matches", "label": "Print every line containing 404", "check": { "type": "matchOutput", "expected": "404 GET /missing\n404 GET /old-page" } }],
+      "expectedOutput": "404 GET /missing\n404 GET /old-page"
+    },
+    {
+      "id": "t1-grep-2",
+      "title": "Count matches with -c",
+      "task": "Instead of printing the matching lines, print how many lines contain '200' using -c.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["-c makes grep print a count instead of the matching lines", "Try: grep -c 200 access.log"],
+      "criteria": [{ "id": "count", "label": "Print the count of 200 lines, not the lines", "check": { "type": "matchOutput", "expected": "3" } }],
+      "expectedOutput": "3"
+    },
+    {
+      "id": "t1-grep-3",
+      "title": "Invert the match with -v",
+      "task": "Print every line that does NOT contain '200', using -v.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["-v inverts the match", "Try: grep -v 200 access.log"],
+      "criteria": [{ "id": "inverted", "label": "Print every non-200 line", "check": { "type": "matchOutput", "expected": "404 GET /missing\n500 GET /api/users\n404 GET /old-page" } }],
+      "expectedOutput": "404 GET /missing\n500 GET /api/users\n404 GET /old-page"
+    }
+  ]
+}

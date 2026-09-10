@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { track1 } from './curriculum/track1';
-import { track2 } from './curriculum/track2';
+import { ALL_LESSONS } from './curriculum/loadCurriculum';
 import { TRACKS } from './curriculum/types';
 import { useLessonSession } from './lesson/useLessonSession';
 import Terminal from './terminal/Terminal';
 import LessonPanel from './lesson/LessonPanel';
+import GuidePanel from './lesson/GuidePanel';
 import CurriculumSidebar from './curriculum/CurriculumSidebar';
 import './styles/terminal.css';
 
-const ALL_LESSONS = [...track1, ...track2];
 const PROGRESS_KEY = 'unix-playground:progress';
 
 interface Progress {
@@ -51,10 +50,20 @@ export default function App() {
     });
   };
 
-  const { state, input, setInput, scrollback, submit, check, completed, hintIndex, pure, preview } =
-    useLessonSession(lesson);
-
-  const statusClass = completed ? 'correct' : check.status;
+  const {
+    state,
+    input,
+    setInput,
+    scrollback,
+    submit,
+    criteria,
+    statusClass,
+    statusMessage,
+    completed,
+    hintIndex,
+    pure,
+    preview,
+  } = useLessonSession(lesson);
 
   return (
     <div className="page">
@@ -69,11 +78,13 @@ export default function App() {
 
         <LessonPanel
           lesson={lesson}
-          check={check}
+          criteria={criteria}
+          statusMessage={statusMessage}
           completed={completed}
           hintIndex={hintIndex}
           hasNext={lessonIdx < ALL_LESSONS.length - 1}
           onNext={advance}
+          preview={preview}
         />
         <Terminal
           state={state}
@@ -89,6 +100,7 @@ export default function App() {
           onNext={advance}
         />
       </div>
+      <GuidePanel guide={lesson.guide} />
     </div>
   );
 }

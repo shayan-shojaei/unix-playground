@@ -1,0 +1,43 @@
+{
+  "concept": "job control",
+  "track": 2,
+  "guide": {
+    "concept": "job control",
+    "description": "fg brings a background job back to the foreground and waits for it to finish. Give it %<id> to pick a specific job, or nothing at all to grab the most recently backgrounded one.",
+    "syntax": "fg [%id]",
+    "flags": [{ "flag": "%id", "desc": "which job to bring back — omit it to target the most recent one" }],
+    "examples": [
+      { "cmd": "fg %1", "output": "sleep 5\n[1]+ Done    sleep 5", "note": "brings job 1 to the foreground and waits" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t2-fg-1",
+      "title": "Bring a job to the foreground",
+      "task": "Start a job with 'sleep 5 &', then bring it back with 'fg %1'.",
+      "startFs": {
+        "report.txt": { "content": "line one\nline two\nline three" },
+        "report.csv": { "content": "id,amount\n1,100\n2,250" },
+        "notes.md": { "content": "meeting notes" },
+        "build.sh": { "content": "#!/bin/sh\necho building" }
+      },
+      "startCwd": [],
+      "hints": ["Try: sleep 5 &", "Try: fg %1"],
+      "criteria": [{ "id": "done", "label": "The backgrounded job finished via fg", "check": { "type": "state", "predicate": "bgJobDone" } }]
+    },
+    {
+      "id": "t2-fg-2",
+      "title": "fg without a job number",
+      "task": "Start 'sleep 4 &', then bring it to the foreground WITHOUT specifying a job number — plain 'fg' targets the most recent job.",
+      "startFs": {
+        "report.txt": { "content": "line one\nline two\nline three" },
+        "report.csv": { "content": "id,amount\n1,100\n2,250" },
+        "notes.md": { "content": "meeting notes" },
+        "build.sh": { "content": "#!/bin/sh\necho building" }
+      },
+      "startCwd": [],
+      "hints": ["fg with no argument defaults to the last backgrounded job", "Try: sleep 4 &", "Try: fg"],
+      "criteria": [{ "id": "done", "label": "The backgrounded job finished via plain fg", "check": { "type": "state", "predicate": "bgJobDone" } }]
+    }
+  ]
+}

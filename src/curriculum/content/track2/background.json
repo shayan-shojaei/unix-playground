@@ -1,0 +1,43 @@
+{
+  "concept": "job control",
+  "track": 2,
+  "guide": {
+    "concept": "job control",
+    "description": "Appending & to a command runs it in the background and immediately hands the prompt back to you, instead of blocking until it finishes. The shell tracks it as a numbered job you can check on or bring back later.",
+    "syntax": "cmd &",
+    "flags": [{ "flag": "&", "desc": "run the preceding command in the background" }],
+    "examples": [
+      { "cmd": "sleep 5 &", "output": "[1] running in background", "note": "the prompt returns right away" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t2-background-1",
+      "title": "Background a job",
+      "task": "Start 'sleep 5' in the background.",
+      "startFs": {
+        "report.txt": { "content": "line one\nline two\nline three" },
+        "report.csv": { "content": "id,amount\n1,100\n2,250" },
+        "notes.md": { "content": "meeting notes" },
+        "build.sh": { "content": "#!/bin/sh\necho building" }
+      },
+      "startCwd": [],
+      "hints": ["Add & after the command", "Try: sleep 5 &"],
+      "criteria": [{ "id": "one-job", "label": "One job running in the background", "check": { "type": "state", "predicate": "bgJobCount", "min": 1 } }]
+    },
+    {
+      "id": "t2-background-2",
+      "title": "Background more than one job",
+      "task": "Start two background jobs: 'sleep 3' and 'sleep 5'.",
+      "startFs": {
+        "report.txt": { "content": "line one\nline two\nline three" },
+        "report.csv": { "content": "id,amount\n1,100\n2,250" },
+        "notes.md": { "content": "meeting notes" },
+        "build.sh": { "content": "#!/bin/sh\necho building" }
+      },
+      "startCwd": [],
+      "hints": ["Each & starts its own job — run them one at a time", "Try: sleep 3 &", "Try: sleep 5 &"],
+      "criteria": [{ "id": "two-jobs", "label": "Two jobs running in the background", "check": { "type": "state", "predicate": "bgJobCount", "min": 2 } }]
+    }
+  ]
+}

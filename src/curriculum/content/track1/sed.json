@@ -1,0 +1,42 @@
+{
+  "concept": "sed",
+  "track": 1,
+  "guide": {
+    "concept": "sed",
+    "description": "sed 's/pattern/replacement/' rewrites matching text on every line. By default it only replaces the FIRST match per line — add a trailing g (global) to replace every match on the line instead. Matching is case-sensitive, just like grep.",
+    "syntax": "sed 's/pattern/replacement/[g]' [file]",
+    "flags": [{ "flag": "g", "desc": "(inside the expression, not a real flag) replace every match per line, not just the first" }],
+    "examples": [
+      { "cmd": "sed 's/s/S/' access.log", "output": "200 GET /home\n404 GET /miSsing\n200 GET /about\n500 GET /api/uSers\n200 GET /home\n404 GET /old-page", "note": "only the FIRST s on a line is replaced" },
+      { "cmd": "sed 's/s/S/g' access.log", "output": "200 GET /home\n404 GET /miSSing\n200 GET /about\n500 GET /api/uSerS\n200 GET /home\n404 GET /old-page", "note": "g catches every s on the line" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t1-sed-1",
+      "title": "sed's first-match default",
+      "task": "Replace the first lowercase 's' on every line of access.log with 'S'.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["sed 's/from/to/' replaces only the first match per line", "Try: sed 's/s/S/' access.log"],
+      "criteria": [{ "id": "first-s", "label": "Replace only the first s per line", "check": { "type": "matchOutput", "expected": "200 GET /home\n404 GET /miSsing\n200 GET /about\n500 GET /api/uSers\n200 GET /home\n404 GET /old-page" } }],
+      "expectedOutput": "200 GET /home\n404 GET /miSsing\n200 GET /about\n500 GET /api/uSers\n200 GET /home\n404 GET /old-page"
+    },
+    {
+      "id": "t1-sed-2",
+      "title": "Global replace with g",
+      "task": "Same substitution, but this time replace EVERY lowercase 's' on each line, not just the first, using the g suffix. Notice 'missing' and 'users' each have two.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["Add g right after the closing slash", "Try: sed 's/s/S/g' access.log"],
+      "criteria": [{ "id": "all-s", "label": "Replace every s per line", "check": { "type": "matchOutput", "expected": "200 GET /home\n404 GET /miSSing\n200 GET /about\n500 GET /api/uSerS\n200 GET /home\n404 GET /old-page" } }],
+      "expectedOutput": "200 GET /home\n404 GET /miSSing\n200 GET /about\n500 GET /api/uSerS\n200 GET /home\n404 GET /old-page"
+    }
+  ]
+}

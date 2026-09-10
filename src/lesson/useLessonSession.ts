@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ShellState } from '../fs/types';
-import type { Lesson, CheckResult } from '../curriculum/types';
+import type { LessonInstance } from '../curriculum/types';
+import { fromFsSpec } from '../curriculum/fsSpec';
+import { runCheck } from '../curriculum/checkRunner';
 import { tokenize } from '../shell/tokenize';
 import { splitPipeline, type ParsedLine } from '../shell/parsePipeline';
 import { runPipeline, isPipelinePure, type ExecResult } from '../shell/execute';
@@ -12,9 +14,15 @@ export interface ScrollbackLine {
   stderr: string;
 }
 
-function freshState(lesson: Lesson): ShellState {
+export interface CriterionResult {
+  id: string;
+  label: string;
+  passed: boolean;
+}
+
+function freshState(lesson: LessonInstance): ShellState {
   return {
-    fs: lesson.startFs,
+    fs: fromFsSpec(lesson.startFs),
     cwd: lesson.startCwd,
     history: [],
     aliases: {},
@@ -25,7 +33,7 @@ function freshState(lesson: Lesson): ShellState {
   };
 }
 
-export function useLessonSession(lesson: Lesson) {
+export function useLessonSession(lesson: LessonInstance) {
   const [state, setState] = useState<ShellState>(() => freshState(lesson));
   const [input, setInput] = useState('');
   const [scrollback, setScrollback] = useState<ScrollbackLine[]>([]);
@@ -76,14 +84,31 @@ export function useLessonSession(lesson: Lesson) {
     }
   }, [state, parsed, pure, input]);
 
-  const check: CheckResult = useMemo(() => {
-    if (completed) return { status: 'correct' };
-    return lesson.check({ rawInput: input, parsed, result: speculativeResult, state });
+  const criteria: CriterionResult[] = useMemo(() => {
+    if (completed) return lesson.criteria.map((c) => ({ id: c.id, label: c.label, passed: true }));
+    const ctx = { rawInput: input, parsed, result: speculativeResult, state };
+    return lesson.criteria.map((c) => ({ id: c.id, label: c.label, passed: runCheck(c.check, ctx) }));
   }, [lesson, input, parsed, speculativeResult, state, completed]);
 
-  // Escalate a hint after a few seconds stuck in a non-empty, non-correct state.
+  const allPassed = criteria.length > 0 && criteria.every((c) => c.passed);
+  const anyPassed = criteria.some((c) => c.passed);
+
+  const statusClass = completed || allPassed
+    ? 'correct'
+    : input.trim() === ''
+      ? 'empty'
+      : speculativeResult && speculativeResult.exitCode !== 0
+        ? 'wrong-track'
+        : anyPassed
+          ? 'close'
+          : 'typing';
+
+  const statusMessage =
+    !allPassed && speculativeResult && speculativeResult.exitCode !== 0 ? speculativeResult.stderr : undefined;
+
+  // Escalate a hint after a few seconds stuck in a non-empty, non-passing state.
   useEffect(() => {
-    if (check.status === 'close' || check.status === 'wrong-track') {
+    if (!completed && input.trim() !== '' && !allPassed) {
       if (amberSinceRef.current === null) amberSinceRef.current = Date.now();
       const elapsed = Date.now() - amberSinceRef.current;
       const nextHint = Math.min(hintIndex + 1, lesson.hints.length - 1);
@@ -94,7 +119,7 @@ export function useLessonSession(lesson: Lesson) {
     } else {
       amberSinceRef.current = null;
     }
-  }, [check.status, hintIndex, lesson.hints.length]);
+  }, [completed, input, allPassed, hintIndex, lesson.hints.length]);
 
   const submit = useCallback(() => {
     if (input.trim() === '') return;
@@ -108,8 +133,9 @@ export function useLessonSession(lesson: Lesson) {
     const nextState: ShellState = { ...result.nextState, history: [...state.history, input] };
     setState(nextState);
     setScrollback((sb) => [...sb, { prompt: promptFor(state), input, stdout: result.stdout, stderr: result.stderr }]);
-    const finalCheck = lesson.check({ rawInput: input, parsed: runParsed, result, state: nextState });
-    if (finalCheck.status === 'correct') setCompleted(true);
+    const finalCtx = { rawInput: input, parsed: runParsed, result, state: nextState };
+    const finalPassed = lesson.criteria.every((c) => runCheck(c.check, finalCtx));
+    if (finalPassed) setCompleted(true);
     setInput('');
   }, [input, state, lesson]);
 
@@ -119,7 +145,9 @@ export function useLessonSession(lesson: Lesson) {
     setInput,
     scrollback,
     submit,
-    check,
+    criteria,
+    statusClass,
+    statusMessage,
     completed,
     hints: lesson.hints,
     hintIndex,

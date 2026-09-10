@@ -1,0 +1,47 @@
+{
+  "concept": "redirects",
+  "track": 1,
+  "guide": {
+    "concept": "redirects",
+    "description": "> sends a command's stdout into a file, creating it or OVERWRITING it if it already exists. >> does the same but appends to the end instead, leaving existing content alone. Redirects run for real the moment you press Enter — they're not shown in the live speculative preview like a pure pipeline is, since they touch the filesystem.",
+    "syntax": "cmd > file    |    cmd >> file",
+    "flags": [
+      { "flag": ">", "desc": "overwrite the target file with stdout" },
+      { "flag": ">>", "desc": "append stdout to the end of the target file" }
+    ],
+    "examples": [
+      { "cmd": "grep admin users.csv > admins.csv", "output": "(nothing printed — it went to the file)", "note": "creates/overwrites admins.csv" },
+      { "cmd": "grep grace users.csv >> admins.csv", "output": "(nothing printed)", "note": "adds to admins.csv without erasing what's there" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t1-redirect-1",
+      "title": "Redirect output to a file",
+      "task": "Save every admin row from users.csv into a new file called admins.csv, using >.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["Redirects are impure — this one runs on Enter, not live-previewed", "Try: grep admin users.csv > admins.csv"],
+      "criteria": [{ "id": "written", "label": "admins.csv contains the admin rows", "check": { "type": "state", "predicate": "fileContains", "path": "admins.csv", "substring": "admin" } }]
+    },
+    {
+      "id": "t1-redirect-2",
+      "title": "Append without erasing",
+      "task": "admins.csv already has the admin rows saved. Now append the 'user' row (grace's) to the END of admins.csv, using >>, WITHOUT losing what's already there.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" },
+        "admins.csv": { "content": "1,ada,admin\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["A single > would overwrite admins.csv and lose the existing rows — use >> instead", "Try: grep grace users.csv >> admins.csv"],
+      "criteria": [
+        { "id": "preserved", "label": "The existing admin rows are still there", "check": { "type": "state", "predicate": "fileContains", "path": "admins.csv", "substring": "ada" } },
+        { "id": "appended", "label": "grace's row was appended", "check": { "type": "state", "predicate": "fileContains", "path": "admins.csv", "substring": "grace" } }
+      ]
+    }
+  ]
+}

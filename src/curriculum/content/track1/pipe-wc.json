@@ -1,0 +1,42 @@
+{
+  "concept": "pipes",
+  "track": 1,
+  "guide": {
+    "concept": "pipes",
+    "description": "The pipe operator | sends one command's stdout straight into the next command's stdin, with nothing written to a file in between. This is how small single-purpose tools like grep, sort, and wc combine into a pipeline that does something none of them could do alone.",
+    "syntax": "cmd1 | cmd2 | cmd3",
+    "flags": [],
+    "examples": [
+      { "cmd": "cat access.log | wc -l", "output": "6", "note": "cat's output becomes wc's input" },
+      { "cmd": "grep 200 access.log | wc -l", "output": "3", "note": "filter, then count what's left" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t1-pipe-wc-1",
+      "title": "Pipe grep into wc",
+      "task": "Count how many lines contain '200' by piping grep into wc -l.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["grep produces lines, wc -l counts them", "Try: grep 200 access.log | wc -l"],
+      "criteria": [{ "id": "count", "label": "Count the 200 lines via a pipe", "check": { "type": "matchOutput", "expected": "3" } }],
+      "expectedOutput": "3"
+    },
+    {
+      "id": "t1-pipe-wc-2",
+      "title": "Count a whole file",
+      "task": "Count every line in access.log by piping cat into wc -l.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["cat with no filter prints the whole file", "Try: cat access.log | wc -l"],
+      "criteria": [{ "id": "count", "label": "Count every line in access.log", "check": { "type": "matchOutput", "expected": "6" } }],
+      "expectedOutput": "6"
+    }
+  ]
+}

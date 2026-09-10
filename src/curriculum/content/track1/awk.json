@@ -1,0 +1,57 @@
+{
+  "concept": "awk",
+  "track": 1,
+  "guide": {
+    "concept": "awk",
+    "description": "awk splits each input line into whitespace-separated fields and lets you print any of them by number: $1 is the first field, $2 the second, and so on ($0 means the whole line). It's the tool for pulling one column out of column-shaped text without reaching for a full parser.",
+    "syntax": "awk '{print $N}' [file]",
+    "flags": [
+      { "flag": "-F<sep>", "desc": "use <sep> as the field separator instead of whitespace" }
+    ],
+    "examples": [
+      { "cmd": "awk '{print $1}' access.log", "output": "200\n404\n200\n500\n200\n404", "note": "first field of every line" },
+      { "cmd": "awk '{print $1, $3}' access.log", "output": "200 /home\n404 /missing\n200 /about\n500 /api/users\n200 /home\n404 /old-page", "note": "print multiple fields, comma-separated" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t1-awk-1",
+      "title": "Pull a field with awk",
+      "task": "access.log's lines look like '200 GET /home' — $1 is the status code. Print just the status code from every line.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["awk '{print $1}' file prints the first field of every line", "Try: awk '{print $1}' access.log"],
+      "criteria": [{ "id": "field1", "label": "Print $1 (status code) of every line", "check": { "type": "matchOutput", "expected": "200\n404\n200\n500\n200\n404" } }],
+      "expectedOutput": "200\n404\n200\n500\n200\n404"
+    },
+    {
+      "id": "t1-awk-2",
+      "title": "Pull a different field",
+      "task": "$N works for any field, not just $1 — print the third field ($3), the URL path, from every line.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["The field number goes right after the $", "Try: awk '{print $3}' access.log"],
+      "criteria": [{ "id": "field3", "label": "Print $3 (the path) of every line", "check": { "type": "matchOutput", "expected": "/home\n/missing\n/about\n/api/users\n/home\n/old-page" } }],
+      "expectedOutput": "/home\n/missing\n/about\n/api/users\n/home\n/old-page"
+    },
+    {
+      "id": "t1-awk-3",
+      "title": "Print multiple fields",
+      "task": "List multiple field numbers separated by a comma to print more than one column. Print the status code and the path together ($1 then $3) from every line.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["print $1, $3 prints both, space-separated", "Try: awk '{print $1, $3}' access.log"],
+      "criteria": [{ "id": "field1and3", "label": "Print $1 and $3 together", "check": { "type": "matchOutput", "expected": "200 /home\n404 /missing\n200 /about\n500 /api/users\n200 /home\n404 /old-page" } }],
+      "expectedOutput": "200 /home\n404 /missing\n200 /about\n500 /api/users\n200 /home\n404 /old-page"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "concept": "globbing",
+  "track": 2,
+  "guide": {
+    "concept": "globbing",
+    "description": "A glob like *.txt lets you refer to a file by pattern instead of typing its exact name. The shell expands it against the current directory before the command ever sees it — if exactly one file matches, that's the file that gets read. Not every command expands globs here: head, tail, wc, grep, sed, awk, sort, uniq, and cut all do — cat and ls take their argument literally. Track 2 assumes you already know cd, ls, pwd, mkdir, mv, cp, rm, cat, and the pipes/text-tools from Track 1 — this track is about working faster.",
+    "syntax": "cmd *.ext",
+    "flags": [
+      { "flag": "*", "desc": "matches any run of characters" },
+      { "flag": "?", "desc": "matches exactly one character" }
+    ],
+    "examples": [
+      { "cmd": "head *.txt", "output": "line one\nline two\nline three", "note": "expands to the one file ending in .txt" },
+      { "cmd": "wc -l *.csv", "output": "3", "note": "globs work with any command that takes a file argument (except cat/ls)" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t2-globbing-1",
+      "title": "Match a file by pattern",
+      "task": "Print report.txt's contents without typing its exact name — use head with *.txt instead.",
+      "startFs": {
+        "report.txt": { "content": "line one\nline two\nline three" },
+        "report.csv": { "content": "id,amount\n1,100\n2,250" },
+        "notes.md": { "content": "meeting notes" },
+        "build.sh": { "content": "#!/bin/sh\necho building" }
+      },
+      "startCwd": [],
+      "hints": ["'*' matches any run of characters — head (unlike cat) expands globs", "Try: head *.txt"],
+      "criteria": [{ "id": "glob-head", "label": "Read the .txt file via a glob", "check": { "type": "matchOutput", "expected": "line one\nline two\nline three" } }],
+      "expectedOutput": "line one\nline two\nline three"
+    },
+    {
+      "id": "t2-globbing-2",
+      "title": "Globs work with any (globbing) command",
+      "task": "Count the lines in report.csv using wc -l, again without typing its exact name.",
+      "startFs": {
+        "report.txt": { "content": "line one\nline two\nline three" },
+        "report.csv": { "content": "id,amount\n1,100\n2,250" },
+        "notes.md": { "content": "meeting notes" },
+        "build.sh": { "content": "#!/bin/sh\necho building" }
+      },
+      "startCwd": [],
+      "hints": ["Same pattern idea, different command", "Try: wc -l *.csv"],
+      "criteria": [{ "id": "glob-wc", "label": "Count lines in the .csv file via a glob", "check": { "type": "matchOutput", "expected": "3" } }],
+      "expectedOutput": "3"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "concept": "job control",
+  "track": 2,
+  "guide": {
+    "concept": "job control",
+    "description": "jobs lists everything currently running (or done) in the background, each tagged with its job number and status. Check it any time you've backgrounded something and want to know if it's still going.",
+    "syntax": "jobs",
+    "flags": [],
+    "examples": [
+      { "cmd": "jobs", "output": "[1] Running    sleep 5", "note": "shows job number, status, and the original command" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t2-jobs-1",
+      "title": "Check on background jobs",
+      "task": "Run 'jobs' now, even with nothing running, to see the empty list.",
+      "startFs": {
+        "report.txt": { "content": "line one\nline two\nline three" },
+        "report.csv": { "content": "id,amount\n1,100\n2,250" },
+        "notes.md": { "content": "meeting notes" },
+        "build.sh": { "content": "#!/bin/sh\necho building" }
+      },
+      "startCwd": [],
+      "hints": ["Try: jobs"],
+      "criteria": [{ "id": "ran-jobs", "label": "Run the jobs command", "check": { "type": "state", "predicate": "commandRan", "name": "jobs" } }]
+    },
+    {
+      "id": "t2-jobs-2",
+      "title": "See a job listed",
+      "task": "Start 'sleep 5' in the background, then run 'jobs' to see it listed as Running.",
+      "startFs": {
+        "report.txt": { "content": "line one\nline two\nline three" },
+        "report.csv": { "content": "id,amount\n1,100\n2,250" },
+        "notes.md": { "content": "meeting notes" },
+        "build.sh": { "content": "#!/bin/sh\necho building" }
+      },
+      "startCwd": [],
+      "hints": ["Background it first, then check", "Try: sleep 5 &", "Try: jobs"],
+      "criteria": [
+        { "id": "ran-jobs", "label": "Run the jobs command", "check": { "type": "state", "predicate": "commandRan", "name": "jobs" } },
+        { "id": "has-job", "label": "At least one background job exists", "check": { "type": "state", "predicate": "bgJobCount", "min": 1 } }
+      ]
+    }
+  ]
+}

@@ -76,10 +76,22 @@
   font-size: 11px;
 }
 
+.curriculum-group {
+  margin-bottom: 12px;
+}
+
+.curriculum-group-title {
+  margin: 0 0 4px;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 10px;
+}
+
 .curriculum-list {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0 0 4px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -87,9 +99,15 @@
 
 .curriculum-item {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
   color: var(--ink-faint);
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.curriculum-item .curriculum-dot {
+  align-self: center;
 }
 
 .curriculum-dot {
@@ -117,13 +135,182 @@
 
 .session {
   width: 100%;
-  max-width: 880px;
+  max-width: 760px;
   height: fit-content;
   background: var(--bg-frame);
   border: 1px solid var(--rule);
   border-radius: 10px;
   box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6);
   overflow: hidden;
+}
+
+/* ---- guide panel: reference material for the active concept, right column ---- */
+
+.guide {
+  width: 320px;
+  flex-shrink: 0;
+  height: fit-content;
+  background: var(--bg-frame);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 16px 18px;
+  font-size: 12.5px;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6);
+}
+
+.guide-concept {
+  margin: 0 0 8px;
+  color: var(--cyan);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 14px;
+  text-shadow: 0 0 10px var(--cyan-soft);
+}
+
+.guide-desc {
+  margin: 0 0 14px;
+  color: var(--ink-dim);
+  line-height: 1.6;
+}
+
+.guide-heading {
+  margin: 0 0 6px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 10.5px;
+}
+
+.guide-syntax {
+  margin: 0 0 14px;
+  padding: 6px 10px;
+  background: var(--bg-raised);
+  border-left: 2px solid var(--violet);
+  border-radius: 0 4px 4px 0;
+  color: var(--ink);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.guide-flags {
+  margin: 0 0 14px;
+}
+
+.guide-flag-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 5px;
+  align-items: baseline;
+}
+
+.guide-flag-row dt {
+  color: var(--cyan);
+  flex-shrink: 0;
+  min-width: 44px;
+}
+
+.guide-flag-row dd {
+  margin: 0;
+  color: var(--ink-dim);
+}
+
+.guide-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.guide-example {
+  padding: 8px 10px;
+  background: var(--bg-raised);
+  border-radius: 4px;
+}
+
+.guide-example-cmd {
+  margin: 0 0 4px;
+  color: var(--green);
+}
+
+.guide-example-out {
+  margin: 0;
+  color: var(--ink-dim);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.guide-example-note {
+  margin: 6px 0 0;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+/* ---- criteria checklist: sub-goals for the active exercise ---- */
+
+.criteria-list {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.criteria-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ink-dim);
+}
+
+.criteria-check {
+  color: var(--ink-faint);
+  flex-shrink: 0;
+}
+
+.criteria-passed {
+  color: var(--ink);
+}
+
+.criteria-passed .criteria-check {
+  color: var(--green);
+}
+
+/* ---- output diff: your live output vs the expected output ---- */
+
+.diff-panel {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 14px 20px;
+}
+
+.diff-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.diff-label {
+  margin: 0 0 4px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 10px;
+}
+
+.diff-body {
+  margin: 0;
+  padding: 6px 8px;
+  background: var(--bg-raised);
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 18px;
+  color: var(--ink-dim);
+}
+
+.diff-expected {
+  color: var(--green);
 }
 
 .session-titlebar {
@@ -380,6 +567,13 @@
 
 .preview-hint {
   color: var(--ink-faint);
+}
+
+@media (max-width: 1180px) {
+  .guide {
+    width: 100%;
+    max-width: 760px;
+  }
 }
 
 @media (max-width: 720px) {
