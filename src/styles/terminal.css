@@ -1,24 +1,27 @@
 :root {
   color-scheme: dark;
 
-  --bg-void: #0a0c11;
-  --bg-frame: #12151c;
-  --bg-raised: #181c26;
-  --rule: #262b36;
-  --rule-soft: #1c202b;
+  --bg-void: #090d12;
+  --bg-frame: #0d1117;
+  --bg-raised: #161b22;
+  --rule: #30363d;
+  --rule-soft: #21262d;
 
-  --ink: #ccd2e0;
-  --ink-dim: #767d90;
-  --ink-faint: #454b5c;
+  --ink: #f0f6fc;
+  --ink-dim: #6e7681;
+  --ink-faint: #454b52;
 
-  --amber: #e3a548;
-  --amber-soft: rgba(227, 165, 72, 0.16);
-  --green: #7fd9a6;
-  --green-soft: rgba(127, 217, 166, 0.14);
-  --red: #e2695a;
-  --red-soft: rgba(226, 105, 90, 0.14);
+  --cyan: #00f0ff;
+  --cyan-soft: rgba(0, 240, 255, 0.16);
+  --green: #05df72;
+  --green-soft: rgba(5, 223, 114, 0.14);
+  --violet: #a855f7;
+  --violet-soft: rgba(168, 85, 247, 0.14);
+  --red: #ef4444;
+  --red-soft: rgba(239, 68, 68, 0.14);
 
   --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --display: 'Space Grotesk', var(--mono);
 }
 
 .page {
@@ -28,6 +31,8 @@
   font-family: var(--mono);
   display: flex;
   justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
   padding: 40px 20px;
   position: relative;
   isolation: isolate;
@@ -41,8 +46,73 @@
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(ellipse 900px 600px at 50% 0%, rgba(227, 165, 72, 0.05), transparent 60%),
+    radial-gradient(ellipse 900px 600px at 50% 0%, rgba(0, 240, 255, 0.05), transparent 60%),
     repeating-linear-gradient(rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 3px);
+}
+
+/* ---- curriculum sidebar: always-visible concept progress ---- */
+
+.curriculum {
+  width: 190px;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.curriculum-track {
+  margin-bottom: 20px;
+}
+
+.curriculum-track-title {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.curriculum-track-count {
+  margin: 2px 0 8px;
+  color: var(--ink-dim);
+  font-size: 11px;
+}
+
+.curriculum-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.curriculum-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-faint);
+}
+
+.curriculum-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+  flex-shrink: 0;
+}
+
+.curriculum-done {
+  color: var(--ink-dim);
+}
+.curriculum-done .curriculum-dot {
+  background: var(--green);
+}
+
+.curriculum-current {
+  color: var(--cyan);
+}
+.curriculum-current .curriculum-dot {
+  background: var(--cyan);
+  box-shadow: 0 0 6px var(--cyan-soft);
 }
 
 .session {
@@ -63,6 +133,8 @@
   padding: 10px 18px;
   border-bottom: 1px solid var(--rule);
   background: var(--bg-raised);
+  font-family: var(--display);
+  font-weight: 600;
   font-size: 12.5px;
 }
 
@@ -96,11 +168,12 @@
 
 .brief-title {
   color: var(--ink);
+  font-family: var(--display);
   font-weight: 600;
 }
 
 .brief-hint {
-  color: var(--amber);
+  color: var(--cyan);
 }
 
 .brief-warn {
@@ -142,7 +215,7 @@
 
 .next-btn:focus-visible,
 .real-input:focus-visible {
-  outline: 2px solid var(--amber);
+  outline: 2px solid var(--cyan);
   outline-offset: 2px;
 }
 
@@ -172,7 +245,7 @@
 }
 
 .scrollback-cmd .prompt {
-  color: var(--amber);
+  color: var(--cyan);
 }
 
 .scrollback-cmd {
@@ -204,22 +277,27 @@
 
 .terminal-inputline.status-correct {
   border-color: var(--green);
-  box-shadow: 0 0 0 1px var(--green-soft);
+  box-shadow: 0 0 0 1px var(--green-soft), 0 0 16px -4px var(--green-soft);
 }
 .terminal-inputline.status-close {
-  border-color: var(--amber);
-  box-shadow: 0 0 0 1px var(--amber-soft);
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 1px var(--cyan-soft);
 }
 .terminal-inputline.status-wrong-track {
   border-color: var(--red);
   box-shadow: 0 0 0 1px var(--red-soft);
 }
 
+.terminal-inputline:focus-within {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 1px var(--cyan-soft), 0 0 16px -4px var(--cyan-soft);
+}
+
 .prompt {
-  color: var(--amber);
+  color: var(--cyan);
   font-size: 13.5px;
   white-space: nowrap;
-  text-shadow: 0 0 10px var(--amber-soft);
+  text-shadow: 0 0 10px var(--cyan-soft);
 }
 
 .input-wrap {
@@ -252,12 +330,12 @@
 .real-input {
   background: transparent;
   color: transparent;
-  caret-color: var(--amber);
+  caret-color: var(--cyan);
   outline: none;
 }
 
 .tok-cmd {
-  color: var(--amber);
+  color: var(--cyan);
 }
 .tok-unknown {
   color: var(--red);
@@ -271,7 +349,7 @@
   color: var(--ink);
 }
 .tok-op {
-  color: var(--ink);
+  color: var(--violet);
   font-weight: 600;
 }
 .tok-word,
@@ -304,9 +382,26 @@
   color: var(--ink-faint);
 }
 
+@media (max-width: 720px) {
+  .page {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .curriculum {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+  }
+}
+
 @media (max-width: 480px) {
   .page {
     padding: 0;
+    gap: 0;
+  }
+  .curriculum {
+    padding: 12px 16px 0;
   }
   .session {
     border-radius: 0;

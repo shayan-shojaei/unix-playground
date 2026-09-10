@@ -14,6 +14,7 @@ export const track2: Lesson[] = [
   {
     id: 't2-intro',
     track: 2,
+    concept: 'globbing',
     title: 'Shell power-ups',
     briefing:
       "Track 2 assumes you already know cd, ls, pwd, mkdir, mv, cp, rm, cat, and the pipes/text-tools from Track 1. This track is about working faster: aliases, globbing, job control, and keyboard shortcuts. Let's start with globbing — list every file ending in .txt using a wildcard.",
@@ -25,6 +26,7 @@ export const track2: Lesson[] = [
   {
     id: 't2-alias',
     track: 2,
+    concept: 'aliases',
     title: 'Define an alias',
     briefing: "alias name=command creates a shortcut. Define an alias called 'll' for 'ls'.",
     startFs: sharedFs(),
@@ -35,6 +37,7 @@ export const track2: Lesson[] = [
   {
     id: 't2-history',
     track: 2,
+    concept: 'history',
     title: 'Reuse history',
     briefing: "The history command lists everything you've run. Run 'history' now to see your session so far.",
     startFs: sharedFs(),
@@ -49,6 +52,7 @@ export const track2: Lesson[] = [
   {
     id: 't2-background',
     track: 2,
+    concept: 'job control',
     title: 'Background a job',
     briefing:
       "Appending & runs a command in the background and immediately gives you back the prompt. Start 'sleep 5' in the background.",
@@ -60,6 +64,7 @@ export const track2: Lesson[] = [
   {
     id: 't2-jobs',
     track: 2,
+    concept: 'job control',
     title: 'Check on background jobs',
     briefing: "jobs lists everything running in the background. Run it now.",
     startFs: sharedFs(),
@@ -74,6 +79,7 @@ export const track2: Lesson[] = [
   {
     id: 't2-fg',
     track: 2,
+    concept: 'job control',
     title: 'Bring a job to the foreground',
     briefing:
       "fg %<id> brings a background job to the foreground and waits for it to finish. Start a job with 'sleep 5 &', then bring it back with 'fg %1'.",

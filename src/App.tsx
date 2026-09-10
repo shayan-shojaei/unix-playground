@@ -1,36 +1,56 @@
 import { useState } from 'react';
 import { track1 } from './curriculum/track1';
 import { track2 } from './curriculum/track2';
+import { TRACKS } from './curriculum/types';
 import { useLessonSession } from './lesson/useLessonSession';
 import Terminal from './terminal/Terminal';
 import LessonPanel from './lesson/LessonPanel';
+import CurriculumSidebar from './curriculum/CurriculumSidebar';
 import './styles/terminal.css';
 
 const ALL_LESSONS = [...track1, ...track2];
-const PROGRESS_KEY = 'unix-playground:lessonIdx';
+const PROGRESS_KEY = 'unix-playground:progress';
 
-function loadProgress(): number {
+interface Progress {
+  completed: string[];
+  currentId: string;
+}
+
+function loadProgress(): Progress {
   try {
-    const raw = Number(localStorage.getItem(PROGRESS_KEY));
-    return Number.isInteger(raw) && raw >= 0 && raw < ALL_LESSONS.length ? raw : 0;
+    const raw = JSON.parse(localStorage.getItem(PROGRESS_KEY) ?? 'null') as Progress | null;
+    if (raw && Array.isArray(raw.completed) && ALL_LESSONS.some((l) => l.id === raw.currentId)) return raw;
   } catch {
-    return 0;
+    // ponytail: best-effort persistence, ignore storage failures (private mode, quota, etc.)
+  }
+  return { completed: [], currentId: ALL_LESSONS[0].id };
+}
+
+function saveProgress(p: Progress) {
+  try {
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+  } catch {
+    // ponytail: best-effort persistence, ignore storage failures (private mode, quota, etc.)
   }
 }
 
 export default function App() {
-  const [lessonIdx, setLessonIdxRaw] = useState(loadProgress);
-  const setLessonIdx = (update: (i: number) => number) =>
-    setLessonIdxRaw((i) => {
-      const next = update(i);
-      try {
-        localStorage.setItem(PROGRESS_KEY, String(next));
-      } catch {
-        // ponytail: best-effort persistence, ignore storage failures (private mode, quota, etc.)
-      }
+  const [progress, setProgress] = useState(loadProgress);
+  const lessonIdx = ALL_LESSONS.findIndex((l) => l.id === progress.currentId);
+  const lesson = ALL_LESSONS[lessonIdx];
+  const completedSet = new Set(progress.completed);
+
+  const advance = () => {
+    setProgress((p) => {
+      const next: Progress = {
+        completed: p.completed.includes(lesson.id) ? p.completed : [...p.completed, lesson.id],
+        currentId: ALL_LESSONS[Math.min(lessonIdx + 1, ALL_LESSONS.length - 1)].id,
+      };
+      saveProgress(next);
       return next;
     });
-  const lesson = ALL_LESSONS[lessonIdx];
+  };
+
   const { state, input, setInput, scrollback, submit, check, completed, hintIndex, pure, preview } =
     useLessonSession(lesson);
 
@@ -38,6 +58,7 @@ export default function App() {
 
   return (
     <div className="page">
+      <CurriculumSidebar tracks={TRACKS} lessons={ALL_LESSONS} completed={completedSet} currentId={lesson.id} />
       <div className="session">
         <div className="session-titlebar">
           <span className="session-path">~/unix-playground</span>
@@ -52,7 +73,7 @@ export default function App() {
           completed={completed}
           hintIndex={hintIndex}
           hasNext={lessonIdx < ALL_LESSONS.length - 1}
-          onNext={() => setLessonIdx((i) => Math.min(i + 1, ALL_LESSONS.length - 1))}
+          onNext={advance}
         />
         <Terminal
           state={state}
@@ -65,7 +86,7 @@ export default function App() {
           pure={pure}
           completed={completed}
           hasNext={lessonIdx < ALL_LESSONS.length - 1}
-          onNext={() => setLessonIdx((i) => Math.min(i + 1, ALL_LESSONS.length - 1))}
+          onNext={advance}
         />
       </div>
     </div>

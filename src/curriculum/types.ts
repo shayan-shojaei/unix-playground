@@ -19,6 +19,7 @@ export interface CheckCtx {
 export interface Lesson {
   id: string;
   track: 1 | 2;
+  concept: string;
   title: string;
   briefing: string;
   startFs: Fs;
@@ -26,3 +27,14 @@ export interface Lesson {
   hints: string[];
   check: (ctx: CheckCtx) => CheckResult;
 }
+
+export interface TrackMeta {
+  id: 1 | 2;
+  title: string;
+  description: string;
+}
+
+export const TRACKS: TrackMeta[] = [
+  { id: 1, title: 'Text Tools', description: 'grep, pipes, awk, sort, uniq, sed, cut, redirects' },
+  { id: 2, title: 'Shell Fundamentals', description: 'globbing, aliases, history, job control' },
+];
