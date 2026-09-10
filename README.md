@@ -6,7 +6,7 @@ graded exercises of increasing difficulty, typed into a simulated shell —
 no real subprocess execution, everything runs against an in-memory virtual
 filesystem and a hand-built shell interpreter.
 
-![Screenshot](.github/assets/screenshot.png)
+![Demo](.github/assets/demo.gif)
 
 ## Stack
 
