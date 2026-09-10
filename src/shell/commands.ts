@@ -1,5 +1,5 @@
-import type { ShellState } from '../fs/types';
-import { getNode, listDir, normalizeSegments, expandGlob } from '../fs/fsOps';
+import type { ShellState, MediaMeta } from '../fs/types';
+import { getNode, listDir, normalizeSegments, expandGlob, setNode } from '../fs/fsOps';
 
 export interface CmdResult {
   stdout: string;
@@ -333,5 +333,62 @@ export const COMMANDS: Record<string, CmdSpec> = {
   pwd: {
     pure: true,
     run: (ctx) => ok('/' + ctx.state.cwd.join('/')),
+  },
+
+  ffmpeg: {
+    pure: false,
+    run: (ctx) => {
+      // Fixed pattern: ffmpeg -i <input> [-b:a <N>k] [-vf scale=<W>:<H>] <output>
+      let input: string | undefined;
+      let output: string | undefined;
+      let bitrateKbps: number | undefined;
+      let resolution: string | undefined;
+      for (let i = 0; i < ctx.args.length; i++) {
+        const a = ctx.args[i];
+        if (a === '-i') input = ctx.args[++i];
+        else if (a === '-b:a') bitrateKbps = parseInt(ctx.args[++i] ?? '', 10) || undefined;
+        else if (a === '-vf') {
+          const m = (ctx.args[++i] ?? '').match(/^scale=(\d+):(\d+)$/);
+          if (m) resolution = `${m[1]}x${m[2]}`;
+        } else if (!a.startsWith('-')) output = a;
+      }
+      if (!input) return err('ffmpeg: missing -i input file');
+      if (!output) return err('ffmpeg: missing output file');
+
+      const inNode = getNode(ctx.state.fs, normalizeSegments(ctx.state.cwd, input));
+      if (!inNode || inNode.type !== 'file' || !inNode.meta) return err(`ffmpeg: ${input}: not a media file`);
+
+      const codecByExt: Record<string, { codec: string; kind: MediaMeta['kind'] }> = {
+        mp3: { codec: 'mp3', kind: 'audio' },
+        wav: { codec: 'pcm', kind: 'audio' },
+        aac: { codec: 'aac', kind: 'audio' },
+        mp4: { codec: 'h264', kind: 'video' },
+        mov: { codec: 'h264', kind: 'video' },
+        webm: { codec: 'vp9', kind: 'video' },
+      };
+      const ext = output.slice(output.lastIndexOf('.') + 1).toLowerCase();
+      const target = codecByExt[ext];
+      if (!target) return err(`ffmpeg: unsupported output format: .${ext}`);
+
+      const meta: MediaMeta = {
+        kind: target.kind,
+        durationSec: inNode.meta.durationSec,
+        codec: target.codec,
+        bitrateKbps: bitrateKbps ?? inNode.meta.bitrateKbps,
+        resolution: target.kind === 'video' ? (resolution ?? inNode.meta.resolution) : undefined,
+      };
+      const h = Math.floor(meta.durationSec / 3600);
+      const m = Math.floor((meta.durationSec % 3600) / 60);
+      const s = meta.durationSec % 60;
+      const ts = [h, m, s].map((n) => String(n).padStart(2, '0')).join(':');
+      const summary = `${meta.codec}, ${meta.bitrateKbps}kbps${meta.resolution ? `, ${meta.resolution}` : ''}, ${ts}`;
+
+      const fs = setNode(ctx.state.fs, normalizeSegments(ctx.state.cwd, output), () => ({
+        type: 'file',
+        content: summary,
+        meta,
+      }));
+      return ok(`ffmpeg: wrote ${output} (${summary})`, { fs });
+    },
   },
 };

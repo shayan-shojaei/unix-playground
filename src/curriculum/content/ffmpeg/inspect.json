@@ -1,0 +1,27 @@
+{
+  "concept": "inspect",
+  "course": "ffmpeg",
+  "guide": {
+    "concept": "inspect",
+    "description": "There's no separate inspection command here — ffmpeg prints a summary of what it wrote, and cat prints that same summary back out of the file whenever you need to check it again later.",
+    "syntax": "cat <output>",
+    "flags": [],
+    "examples": [
+      { "cmd": "cat clip-720p.mp4", "output": "h264, 8000kbps, 1280x720, 00:03:12", "note": "codec, bitrate, resolution, duration" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "ffmpeg-inspect-1",
+      "title": "Convert, then inspect",
+      "task": "Convert raw-interview.mov to highlight.mp4, then use cat to print its summary.",
+      "startFs": {
+        "raw-interview.mov": { "content": "video file", "meta": { "kind": "video", "durationSec": 192, "codec": "h264", "resolution": "1920x1080", "bitrateKbps": 8000 } }
+      },
+      "startCwd": [],
+      "hints": ["First convert with ffmpeg -i raw-interview.mov highlight.mp4", "Then cat highlight.mp4 to see the summary"],
+      "criteria": [{ "id": "inspected", "label": "cat highlight.mp4 prints its summary", "check": { "type": "matchOutput", "expected": "h264, 8000kbps, 1920x1080, 00:03:12" } }],
+      "expectedOutput": "h264, 8000kbps, 1920x1080, 00:03:12"
+    }
+  ]
+}

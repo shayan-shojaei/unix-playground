@@ -1,6 +1,6 @@
 {
   "concept": "job control",
-  "track": 2,
+  "course": "shell-fundamentals",
   "guide": {
     "concept": "job control",
     "description": "fg brings a background job back to the foreground and waits for it to finish. Give it %<id> to pick a specific job, or nothing at all to grab the most recently backgrounded one.",

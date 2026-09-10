@@ -1,4 +1,4 @@
-import type { ShellState } from '../fs/types';
+import type { ShellState, MediaMeta } from '../fs/types';
 import type { ParsedLine } from '../shell/parsePipeline';
 import type { ExecResult } from '../shell/execute';
 
@@ -27,7 +27,7 @@ export interface Criterion {
 }
 
 // JSON-serializable mirror of fs/types.ts's dir()/file() tree.
-export type FsSpec = Record<string, { content: string } | { children: FsSpec }>;
+export type FsSpec = Record<string, { content: string; meta?: MediaMeta } | { children: FsSpec }>;
 
 export interface ConceptGuide {
   concept: string;
@@ -51,7 +51,7 @@ export interface Exercise {
 
 export interface ConceptGroup {
   concept: string;
-  track: 1 | 2;
+  course: string;
   guide: ConceptGuide;
   exercises: Exercise[];
 }
@@ -59,18 +59,23 @@ export interface ConceptGroup {
 // Flattened, one per exercise, with its parent group's metadata folded in —
 // the shape the rest of the app (sidebar, session, progress) consumes.
 export interface LessonInstance extends Exercise {
-  track: 1 | 2;
+  course: string;
   concept: string;
   guide: ConceptGuide;
 }
 
-export interface TrackMeta {
-  id: 1 | 2;
+export interface CourseMeta {
+  id: string;
   title: string;
   description: string;
 }
 
-export const TRACKS: TrackMeta[] = [
-  { id: 1, title: 'Text Tools', description: 'grep, pipes, awk, sort, uniq, sed, cut, redirects' },
-  { id: 2, title: 'Shell Fundamentals', description: 'globbing, aliases, history, job control' },
-];
+// Every course must be listed here, even before its content directory
+// exists — the landing page needs the full list up front.
+export const COURSES = [
+  { id: 'text-tools', title: 'Text Tools', description: 'grep, pipes, awk, sort, uniq, sed, cut, redirects' },
+  { id: 'shell-fundamentals', title: 'Shell Fundamentals', description: 'globbing, aliases, history, job control' },
+  { id: 'ffmpeg', title: 'FFMPEG', description: 'convert, resize, and inspect media files from the command line' },
+] as const satisfies CourseMeta[];
+
+export type CourseId = (typeof COURSES)[number]['id'];

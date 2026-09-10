@@ -1,0 +1,26 @@
+{
+  "concept": "audio-bitrate",
+  "course": "ffmpeg",
+  "guide": {
+    "concept": "audio-bitrate",
+    "description": "-b:a sets the target audio bitrate — how many kilobits per second the encoded audio uses. Lower bitrates make smaller files at the cost of quality; podcasts and voice are usually fine well below music-quality bitrates.",
+    "syntax": "ffmpeg -i <input> -b:a <rate>k <output>",
+    "flags": [{ "flag": "-b:a <rate>k", "desc": "target audio bitrate in kbps, e.g. 128k" }],
+    "examples": [
+      { "cmd": "ffmpeg -i podcast.wav -b:a 96k podcast.mp3", "output": "ffmpeg: wrote podcast.mp3 (mp3, 96kbps, 00:30:40)", "note": "96k is a common speech-quality bitrate" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "ffmpeg-bitrate-1",
+      "title": "Set the audio bitrate",
+      "task": "Convert podcast-ep1.wav to podcast-ep1-128.mp3 at a bitrate of 128k.",
+      "startFs": {
+        "podcast-ep1.wav": { "content": "audio file", "meta": { "kind": "audio", "durationSec": 1840, "codec": "pcm", "bitrateKbps": 1411 } }
+      },
+      "startCwd": [],
+      "hints": ["-b:a <rate>k goes between -i <input> and the output file", "ffmpeg -i podcast-ep1.wav -b:a 128k podcast-ep1-128.mp3"],
+      "criteria": [{ "id": "bitrate", "label": "Create podcast-ep1-128.mp3 at 128kbps", "check": { "type": "state", "predicate": "fileContains", "path": "podcast-ep1-128.mp3", "substring": "128kbps" } }]
+    }
+  ]
+}

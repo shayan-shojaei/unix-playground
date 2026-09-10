@@ -1,9 +1,9 @@
 {
   "concept": "globbing",
-  "track": 2,
+  "course": "shell-fundamentals",
   "guide": {
     "concept": "globbing",
-    "description": "A glob like *.txt lets you refer to a file by pattern instead of typing its exact name. The shell expands it against the current directory before the command ever sees it — if exactly one file matches, that's the file that gets read. Not every command expands globs here: head, tail, wc, grep, sed, awk, sort, uniq, and cut all do — cat and ls take their argument literally. Track 2 assumes you already know cd, ls, pwd, mkdir, mv, cp, rm, cat, and the pipes/text-tools from Track 1 — this track is about working faster.",
+    "description": "A glob like *.txt lets you refer to a file by pattern instead of typing its exact name. The shell expands it against the current directory before the command ever sees it — if exactly one file matches, that's the file that gets read. Not every command expands globs here: head, tail, wc, grep, sed, awk, sort, uniq, and cut all do — cat and ls take their argument literally. Shell Fundamentals assumes you already know ls, pwd, cat, and the pipes/text-tools from the Text Tools course — this course is about working faster.",
     "syntax": "cmd *.ext",
     "flags": [
       { "flag": "*", "desc": "matches any run of characters" },

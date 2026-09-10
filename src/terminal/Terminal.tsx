@@ -116,7 +116,10 @@ export default function Terminal({
       return;
     }
     if (e.key === 'Enter') {
-      if (completed && hasNext) {
+      // Ctrl/Cmd+Enter advances regardless of what's typed; plain Enter always
+      // runs the input as a command — even after completion — so solving a
+      // lesson doesn't hijack Enter from someone still poking at the shell.
+      if ((e.ctrlKey || e.metaKey) && completed && hasNext) {
         e.preventDefault();
         onNext();
         return;

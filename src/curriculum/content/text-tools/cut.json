@@ -1,6 +1,6 @@
 {
   "concept": "cut",
-  "track": 1,
+  "course": "text-tools",
   "guide": {
     "concept": "cut",
     "description": "cut pulls one field out of delimiter-separated text — the tool of choice for CSV-shaped data where awk's whitespace splitting won't work. -d sets the delimiter, -f picks the field number (1-indexed, just like awk's $N). Write the delimiter right after -d with no quotes or space — this shell's tokenizer only strips quote characters when they open a word, so -d',' keeps its literal quote marks instead of stripping down to a comma.",

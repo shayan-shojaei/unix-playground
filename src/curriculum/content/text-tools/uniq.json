@@ -1,6 +1,6 @@
 {
   "concept": "uniq",
-  "track": 1,
+  "course": "text-tools",
   "guide": {
     "concept": "uniq",
     "description": "uniq collapses consecutive duplicate lines into one. It only looks at ADJACENT lines — it has no idea two matching lines exist if something else sits between them — which is exactly why you sort first. -c prefixes each remaining line with how many times it occurred.",

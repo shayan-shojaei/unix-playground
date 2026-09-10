@@ -1,0 +1,39 @@
+{
+  "concept": "convert",
+  "course": "ffmpeg",
+  "guide": {
+    "concept": "convert",
+    "description": "ffmpeg reads a media file and writes a new one in whatever format the output filename's extension names — pick .mp3 and you get an mp3, pick .mp4 and you get an h264 video. It's the tool you reach for first any time audio or video needs to change shape before it goes somewhere else.",
+    "syntax": "ffmpeg -i <input> <output>",
+    "flags": [{ "flag": "-i <file>", "desc": "the input media file to read" }],
+    "examples": [
+      { "cmd": "ffmpeg -i podcast.wav podcast.mp3", "output": "ffmpeg: wrote podcast.mp3 (mp3, 1411kbps, 00:30:40)", "note": "the output extension picks the codec" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "ffmpeg-convert-1",
+      "title": "Convert audio to mp3",
+      "task": "Convert podcast-ep1.wav to podcast-ep1.mp3 with ffmpeg.",
+      "startFs": {
+        "raw-interview.mov": { "content": "video file", "meta": { "kind": "video", "durationSec": 192, "codec": "h264", "resolution": "1920x1080", "bitrateKbps": 8000 } },
+        "podcast-ep1.wav": { "content": "audio file", "meta": { "kind": "audio", "durationSec": 1840, "codec": "pcm", "bitrateKbps": 1411 } }
+      },
+      "startCwd": [],
+      "hints": ["ffmpeg -i <input> <output> converts based on the output's extension", "ffmpeg -i podcast-ep1.wav podcast-ep1.mp3"],
+      "criteria": [{ "id": "converted", "label": "Create podcast-ep1.mp3 from the wav", "check": { "type": "state", "predicate": "fileContains", "path": "podcast-ep1.mp3", "substring": "mp3" } }]
+    },
+    {
+      "id": "ffmpeg-convert-2",
+      "title": "Convert video to mp4",
+      "task": "Convert raw-interview.mov to raw-interview.mp4 with ffmpeg.",
+      "startFs": {
+        "raw-interview.mov": { "content": "video file", "meta": { "kind": "video", "durationSec": 192, "codec": "h264", "resolution": "1920x1080", "bitrateKbps": 8000 } },
+        "podcast-ep1.wav": { "content": "audio file", "meta": { "kind": "audio", "durationSec": 1840, "codec": "pcm", "bitrateKbps": 1411 } }
+      },
+      "startCwd": [],
+      "hints": ["Same pattern: ffmpeg -i <input> <output>", "ffmpeg -i raw-interview.mov raw-interview.mp4"],
+      "criteria": [{ "id": "converted", "label": "Create raw-interview.mp4 from the mov", "check": { "type": "state", "predicate": "fileContains", "path": "raw-interview.mp4", "substring": "h264" } }]
+    }
+  ]
+}

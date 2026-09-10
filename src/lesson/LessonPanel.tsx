@@ -73,10 +73,10 @@ export default function LessonPanel({
           <span className="gutter">#</span> ✓ correct.{' '}
           {hasNext ? (
             <button className="next-btn" onClick={onNext}>
-              next lesson →<span className="next-key">enter</span>
+              next lesson →<span className="next-key">ctrl+enter</span>
             </button>
           ) : (
-            'track complete 🎉'
+            'course complete 🎉'
           )}
         </p>
       )}

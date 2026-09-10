@@ -1,6 +1,6 @@
 {
   "concept": "history",
-  "track": 2,
+  "course": "shell-fundamentals",
   "guide": {
     "concept": "history",
     "description": "history lists every command you've run in this session, numbered in order. It's the shell's memory — useful on its own, and the foundation for reverse-search (Ctrl+R) and the up-arrow, both of which just replay entries from this same list.",

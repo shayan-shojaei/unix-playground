@@ -1,6 +1,6 @@
 {
   "concept": "job control",
-  "track": 2,
+  "course": "shell-fundamentals",
   "guide": {
     "concept": "job control",
     "description": "jobs lists everything currently running (or done) in the background, each tagged with its job number and status. Check it any time you've backgrounded something and want to know if it's still going.",

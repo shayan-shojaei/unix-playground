@@ -50,6 +50,77 @@
     repeating-linear-gradient(rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 3px);
 }
 
+/* ---- landing: course picker ---- */
+
+.landing {
+  min-height: 100svh;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 80px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.landing-title {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 28px;
+  color: var(--ink);
+  text-align: center;
+}
+
+.landing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.landing-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font-family: var(--mono);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.15s ease;
+}
+
+.landing-card:hover,
+.landing-card:focus-visible {
+  border-color: var(--cyan);
+  outline: none;
+}
+
+.landing-card-title {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.landing-card-desc {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+
+.landing-card-progress {
+  margin: 0;
+  font-size: 11px;
+  color: var(--green);
+}
+
 /* ---- curriculum sidebar: always-visible concept progress ---- */
 
 .curriculum {
@@ -58,11 +129,11 @@
   font-size: 12px;
 }
 
-.curriculum-track {
+.curriculum-course {
   margin-bottom: 20px;
 }
 
-.curriculum-track-title {
+.curriculum-course-title {
   margin: 0;
   color: var(--ink);
   font-family: var(--display);
@@ -70,7 +141,7 @@
   font-size: 13px;
 }
 
-.curriculum-track-count {
+.curriculum-course-count {
   margin: 2px 0 8px;
   color: var(--ink-dim);
   font-size: 11px;
@@ -327,6 +398,23 @@
 
 .session-path {
   color: var(--ink);
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--ink-dim);
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.back-btn:hover,
+.back-btn:focus-visible {
+  color: var(--cyan);
+  outline: none;
 }
 
 .session-progress {

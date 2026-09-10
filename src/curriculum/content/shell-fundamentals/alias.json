@@ -1,6 +1,6 @@
 {
   "concept": "aliases",
-  "track": 2,
+  "course": "shell-fundamentals",
   "guide": {
     "concept": "aliases",
     "description": "alias name=command defines a shortcut: from then on, typing name behaves as if you'd typed the full command. It's how people compress a long or frequently-typed command down to a couple of characters.",

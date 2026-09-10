@@ -1,6 +1,15 @@
+export interface MediaMeta {
+  kind: 'video' | 'audio';
+  durationSec: number;
+  codec: string;
+  resolution?: string;
+  bitrateKbps: number;
+}
+
 export interface FileNode {
   type: 'file';
   content: string;
+  meta?: MediaMeta;
 }
 
 export interface DirNode {
@@ -33,6 +42,6 @@ export function dir(children: Record<string, FsNode> = {}): DirNode {
   return { type: 'dir', children };
 }
 
-export function file(content: string): FileNode {
-  return { type: 'file', content };
+export function file(content: string, meta?: MediaMeta): FileNode {
+  return { type: 'file', content, meta };
 }

@@ -1,0 +1,26 @@
+{
+  "concept": "video-scale",
+  "course": "ffmpeg",
+  "guide": {
+    "concept": "video-scale",
+    "description": "-vf scale=W:H resizes video to a target width and height in pixels. It's how a raw high-resolution export gets turned into a smaller version for the web, e.g. downscaling a 1080p source to 720p.",
+    "syntax": "ffmpeg -i <input> -vf scale=<width>:<height> <output>",
+    "flags": [{ "flag": "-vf scale=W:H", "desc": "resize video to width W, height H" }],
+    "examples": [
+      { "cmd": "ffmpeg -i clip.mov -vf scale=1280:720 clip-720p.mp4", "output": "ffmpeg: wrote clip-720p.mp4 (h264, 8000kbps, 1280x720, 00:03:12)", "note": "scale=1280:720 downscales to 720p" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "ffmpeg-scale-1",
+      "title": "Resize a video",
+      "task": "Convert raw-interview.mov to interview-720p.mp4, scaled to 1280:720.",
+      "startFs": {
+        "raw-interview.mov": { "content": "video file", "meta": { "kind": "video", "durationSec": 192, "codec": "h264", "resolution": "1920x1080", "bitrateKbps": 8000 } }
+      },
+      "startCwd": [],
+      "hints": ["-vf scale=<width>:<height> goes between -i <input> and the output file", "ffmpeg -i raw-interview.mov -vf scale=1280:720 interview-720p.mp4"],
+      "criteria": [{ "id": "scaled", "label": "Create interview-720p.mp4 at 1280x720", "check": { "type": "state", "predicate": "fileContains", "path": "interview-720p.mp4", "substring": "1280x720" } }]
+    }
+  ]
+}

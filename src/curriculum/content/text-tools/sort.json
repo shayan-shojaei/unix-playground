@@ -1,6 +1,6 @@
 {
   "concept": "sort",
-  "track": 1,
+  "course": "text-tools",
   "guide": {
     "concept": "sort",
     "description": "sort reorders its input lines. By default it sorts alphabetically; -n switches to numeric order (alphabetical would put '10' before '9'). It's most often used right before uniq, since uniq only collapses lines sitting next to each other.",

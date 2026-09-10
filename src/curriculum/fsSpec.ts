@@ -4,7 +4,7 @@ import type { FsSpec } from './types';
 export function fromFsSpec(spec: FsSpec): Fs {
   const children: Record<string, FsNode> = {};
   for (const [name, entry] of Object.entries(spec)) {
-    children[name] = 'content' in entry ? file(entry.content) : fromFsSpec(entry.children);
+    children[name] = 'content' in entry ? file(entry.content, entry.meta) : fromFsSpec(entry.children);
   }
   return dir(children);
 }

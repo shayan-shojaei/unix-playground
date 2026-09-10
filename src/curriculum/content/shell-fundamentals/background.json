@@ -1,6 +1,6 @@
 {
   "concept": "job control",
-  "track": 2,
+  "course": "shell-fundamentals",
   "guide": {
     "concept": "job control",
     "description": "Appending & to a command runs it in the background and immediately hands the prompt back to you, instead of blocking until it finishes. The shell tracks it as a numbered job you can check on or bring back later.",

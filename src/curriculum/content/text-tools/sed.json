@@ -1,6 +1,6 @@
 {
   "concept": "sed",
-  "track": 1,
+  "course": "text-tools",
   "guide": {
     "concept": "sed",
     "description": "sed 's/pattern/replacement/' rewrites matching text on every line. By default it only replaces the FIRST match per line — add a trailing g (global) to replace every match on the line instead. Matching is case-sensitive, just like grep.",

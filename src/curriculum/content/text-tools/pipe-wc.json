@@ -1,6 +1,6 @@
 {
   "concept": "pipes",
-  "track": 1,
+  "course": "text-tools",
   "guide": {
     "concept": "pipes",
     "description": "The pipe operator | sends one command's stdout straight into the next command's stdin, with nothing written to a file in between. This is how small single-purpose tools like grep, sort, and wc combine into a pipeline that does something none of them could do alone.",

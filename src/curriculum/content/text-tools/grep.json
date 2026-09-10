@@ -1,6 +1,6 @@
 {
   "concept": "grep",
-  "track": 1,
+  "course": "text-tools",
   "guide": {
     "concept": "grep",
     "description": "grep scans a file (or stdin) line by line and prints every line matching a pattern. It's the tool you reach for first when you need to find something inside text — a log line, a config value, a name in a list.",
