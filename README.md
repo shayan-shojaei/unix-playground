@@ -6,6 +6,8 @@ graded exercises of increasing difficulty, typed into a simulated shell —
 no real subprocess execution, everything runs against an in-memory virtual
 filesystem and a hand-built shell interpreter.
 
+![Screenshot](.github/assets/screenshot.png)
+
 ## Stack
 
 React 19 + TypeScript, Vite, `oxlint`. No backend, no router, no state
