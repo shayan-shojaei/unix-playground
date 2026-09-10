@@ -1,0 +1,323 @@
+:root {
+  color-scheme: dark;
+
+  --bg-void: #0a0c11;
+  --bg-frame: #12151c;
+  --bg-raised: #181c26;
+  --rule: #262b36;
+  --rule-soft: #1c202b;
+
+  --ink: #ccd2e0;
+  --ink-dim: #767d90;
+  --ink-faint: #454b5c;
+
+  --amber: #e3a548;
+  --amber-soft: rgba(227, 165, 72, 0.16);
+  --green: #7fd9a6;
+  --green-soft: rgba(127, 217, 166, 0.14);
+  --red: #e2695a;
+  --red-soft: rgba(226, 105, 90, 0.14);
+
+  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+.page {
+  min-height: 100svh;
+  background: var(--bg-void);
+  color: var(--ink);
+  font-family: var(--mono);
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Faint vignette + scanline texture behind the session window — decorative
+   only, kept low-opacity so it never competes with the live-typed line. */
+.page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 900px 600px at 50% 0%, rgba(227, 165, 72, 0.05), transparent 60%),
+    repeating-linear-gradient(rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 3px);
+}
+
+.session {
+  width: 100%;
+  max-width: 880px;
+  height: fit-content;
+  background: var(--bg-frame);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.session-titlebar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg-raised);
+  font-size: 12.5px;
+}
+
+.session-path {
+  color: var(--ink);
+}
+
+.session-progress {
+  color: var(--ink-dim);
+  letter-spacing: 0.02em;
+}
+
+/* ---- lesson briefing, rendered as comment lines inside the session ---- */
+
+.brief {
+  padding: 18px 20px 4px;
+}
+
+.brief-line {
+  margin: 0 0 6px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-dim);
+  max-width: 68ch;
+}
+
+.gutter {
+  color: var(--ink-faint);
+  margin-right: 2px;
+}
+
+.brief-title {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.brief-hint {
+  color: var(--amber);
+}
+
+.brief-warn {
+  color: var(--red);
+}
+
+.brief-done {
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.next-btn {
+  font-family: inherit;
+  font-size: 12.5px;
+  color: var(--bg-void);
+  background: var(--green);
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.next-key {
+  font-size: 10.5px;
+  letter-spacing: 0.03em;
+  background: rgba(10, 12, 17, 0.25);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+.next-btn:hover {
+  filter: brightness(1.08);
+}
+
+.next-btn:focus-visible,
+.real-input:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+/* ---- terminal: scrollback + live input, flush inside the same frame ---- */
+
+.terminal {
+  padding: 14px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--rule-soft);
+  margin-top: 8px;
+}
+
+.terminal-scrollback {
+  overflow-y: auto;
+  max-height: 42vh;
+  font-size: 13.5px;
+}
+
+.terminal-scrollback:empty {
+  display: none;
+}
+
+.scrollback-entry {
+  margin-bottom: 10px;
+}
+
+.scrollback-cmd .prompt {
+  color: var(--amber);
+}
+
+.scrollback-cmd {
+  color: var(--ink);
+}
+
+.scrollback-out {
+  margin: 3px 0 0;
+  white-space: pre-wrap;
+  color: var(--ink-dim);
+}
+
+.scrollback-err {
+  margin: 3px 0 0;
+  white-space: pre-wrap;
+  color: var(--red);
+}
+
+.terminal-inputline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: var(--bg-void);
+  border: 1px solid var(--rule);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.terminal-inputline.status-correct {
+  border-color: var(--green);
+  box-shadow: 0 0 0 1px var(--green-soft);
+}
+.terminal-inputline.status-close {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 1px var(--amber-soft);
+}
+.terminal-inputline.status-wrong-track {
+  border-color: var(--red);
+  box-shadow: 0 0 0 1px var(--red-soft);
+}
+
+.prompt {
+  color: var(--amber);
+  font-size: 13.5px;
+  white-space: nowrap;
+  text-shadow: 0 0 10px var(--amber-soft);
+}
+
+.input-wrap {
+  position: relative;
+  flex: 1;
+  height: 20px;
+}
+
+.overlay,
+.real-input {
+  position: absolute;
+  inset: 0;
+  font: 13.5px/20px var(--mono);
+  white-space: pre;
+  overflow-x: auto;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.overlay {
+  color: var(--ink);
+  pointer-events: none;
+  scrollbar-width: none;
+}
+.overlay::-webkit-scrollbar {
+  display: none;
+}
+
+.real-input {
+  background: transparent;
+  color: transparent;
+  caret-color: var(--amber);
+  outline: none;
+}
+
+.tok-cmd {
+  color: var(--amber);
+}
+.tok-unknown {
+  color: var(--red);
+  text-decoration: underline wavy;
+  text-decoration-color: var(--red);
+}
+.tok-flag {
+  color: #8fb3d9;
+}
+.tok-arg {
+  color: var(--ink);
+}
+.tok-op {
+  color: var(--ink);
+  font-weight: 600;
+}
+.tok-word,
+.tok-space {
+  color: inherit;
+}
+
+.preview-pane {
+  font-size: 12.5px;
+  padding: 8px 10px;
+  background: var(--bg-raised);
+  border-left: 2px solid var(--rule);
+  border-radius: 0 4px 4px 0;
+  min-height: 18px;
+}
+
+.preview-out {
+  margin: 0;
+  color: var(--green);
+  white-space: pre-wrap;
+}
+
+.preview-err {
+  margin: 0;
+  color: var(--red);
+  white-space: pre-wrap;
+}
+
+.preview-hint {
+  color: var(--ink-faint);
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 0;
+  }
+  .session {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    min-height: 100svh;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .real-input {
+    caret-shape: block;
+  }
+}
