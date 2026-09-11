@@ -1,0 +1,68 @@
+{
+  "concept": "tr",
+  "course": "text-tools",
+  "guide": {
+    "concept": "tr",
+    "description": "tr <from> <to> translates characters one-for-one: every character in <from> gets swapped for the character at the same position in <to>. Unlike every other tool in this course, tr only ever reads stdin — it has no file argument — so it always sits on the right side of a pipe. With -d it drops every character in its argument instead of replacing anything.",
+    "syntax": "cmd | tr <from> <to>    |    cmd | tr -d <chars>",
+    "flags": [{ "flag": "-d <chars>", "desc": "delete every occurrence of these characters instead of translating" }],
+    "examples": [
+      { "cmd": "echo hello | tr l L", "output": "heLLo", "note": "every l becomes L" },
+      { "cmd": "echo hello | tr -d l", "output": "heo", "note": "every l is dropped instead" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t1-tr-1",
+      "title": "Translate one character",
+      "task": "Pipe access.log through tr to replace every lowercase 'o' with the digit '0'.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["tr only reads stdin, so it has to come after a pipe: cat <file> | tr <from> <to>", "The character to replace is a lowercase o, swapped for the digit 0"],
+      "criteria": [{ "id": "translated", "label": "Every o becomes 0", "check": { "type": "matchOutput", "expected": "200 GET /h0me\n404 GET /missing\n200 GET /ab0ut\n500 GET /api/users\n200 GET /h0me\n404 GET /0ld-page" } }],
+      "expectedOutput": "200 GET /h0me\n404 GET /missing\n200 GET /ab0ut\n500 GET /api/users\n200 GET /h0me\n404 GET /0ld-page"
+    },
+    {
+      "id": "t1-tr-2",
+      "title": "Delete characters with -d",
+      "task": "Pipe access.log through tr -d to delete every digit (0-9) from it.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["-d takes a set of characters to delete, not a from/to pair", "List every digit: tr -d 0123456789"],
+      "criteria": [{ "id": "deleted", "label": "Every digit is gone", "check": { "type": "matchOutput", "expected": " GET /home\n GET /missing\n GET /about\n GET /api/users\n GET /home\n GET /old-page" } }],
+      "expectedOutput": " GET /home\n GET /missing\n GET /about\n GET /api/users\n GET /home\n GET /old-page"
+    },
+    {
+      "id": "t1-tr-3",
+      "title": "Chain cut into tr",
+      "task": "Extract the role column (3rd field) from users.csv with cut, then pipe it through tr to replace every 'a' with '@'.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["You already know cut -d, -f3 users.csv pulls the role column", "Pipe that into tr a @"],
+      "criteria": [{ "id": "chained", "label": "Role column with a replaced by @", "check": { "type": "matchOutput", "expected": "role\n@dmin\nuser\n@dmin" } }],
+      "expectedOutput": "role\n@dmin\nuser\n@dmin"
+    },
+    {
+      "id": "t1-tr-4",
+      "title": "Put it together: grep into tr",
+      "task": "Print only the 404 lines from access.log with grep, then pipe them through tr to replace every '4' with 'X'.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["grep 404 access.log finds the right lines, same as lesson one", "Pipe that into tr 4 X"],
+      "criteria": [{ "id": "grep-tr", "label": "404 lines with every 4 replaced by X", "check": { "type": "matchOutput", "expected": "X0X GET /missing\nX0X GET /old-page" } }],
+      "expectedOutput": "X0X GET /missing\nX0X GET /old-page"
+    }
+  ]
+}

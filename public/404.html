@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>unix-playground</title>
+    <script>
+      // GitHub Pages serves this for any unknown path with no server-side
+      // rewrite available. Redirect back to index.html with the original
+      // path+hash preserved in a query param — App.tsx restores it before
+      // the app's first render. Keep this base in sync with vite.config.ts.
+      var base = '/unix-playground/';
+      var redirect = location.pathname.slice(base.length) + location.search + location.hash;
+      location.replace(base + '?redirect=' + encodeURIComponent(redirect));
+    </script>
+  </head>
+  <body></body>
+</html>

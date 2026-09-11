@@ -20,10 +20,19 @@ function loadCourseProgress(courseId: CourseId, lessons: { id: string }[]): Prog
   return { completed: [], currentId: lessons[0].id };
 }
 
+// A #lesson-id in the URL (a deep link, or a page reload) wins over stored
+// progress's currentId — that's the whole point of putting it in the hash.
+function initialProgress(courseId: CourseId, lessons: { id: string }[]): Progress {
+  const stored = loadCourseProgress(courseId, lessons);
+  const hashId = decodeURIComponent(window.location.hash.slice(1));
+  if (hashId && lessons.some((l) => l.id === hashId)) return { ...stored, currentId: hashId };
+  return stored;
+}
+
 export default function CourseSession({ courseId, onBack }: CourseSessionProps) {
   const course = COURSES.find((c) => c.id === courseId)!;
   const lessons = LESSONS_BY_COURSE[courseId];
-  const [progress, setProgress] = useState(() => loadCourseProgress(courseId, lessons));
+  const [progress, setProgress] = useState(() => initialProgress(courseId, lessons));
   const lessonIdx = lessons.findIndex((l) => l.id === progress.currentId);
   const lesson = lessons[lessonIdx];
   const completedSet = new Set(progress.completed);
@@ -41,6 +50,12 @@ export default function CourseSession({ courseId, onBack }: CourseSessionProps) 
         currentId: lessons[Math.min(lessonIdx + 1, lessons.length - 1)].id,
       }),
     );
+  };
+
+  // No restrictions: any lesson in the sidebar (done, current, or upcoming)
+  // is selectable directly, without touching completion state.
+  const jumpTo = (id: string) => {
+    setProgress((p) => persist({ ...p, currentId: id }));
   };
 
   const {
@@ -72,9 +87,18 @@ export default function CourseSession({ courseId, onBack }: CourseSessionProps) 
     });
   }, [completed, lesson.id, courseId]);
 
+  // Keep the URL's #lesson-id in sync so the current exercise is
+  // bookmarkable/shareable — replaceState, not pushState, so jumping
+  // between exercises doesn't spam the browser history.
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    url.hash = encodeURIComponent(lesson.id);
+    window.history.replaceState(null, '', url);
+  }, [lesson.id]);
+
   return (
     <div className="page">
-      <CurriculumSidebar course={course} lessons={lessons} completed={completedSet} currentId={lesson.id} />
+      <CurriculumSidebar course={course} lessons={lessons} completed={completedSet} currentId={lesson.id} onSelect={jumpTo} />
       <div className="session">
         <div className="session-titlebar">
           <button className="back-btn" onClick={onBack}>

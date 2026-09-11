@@ -3,11 +3,12 @@
   "course": "ffmpeg",
   "guide": {
     "concept": "video-scale",
-    "description": "-vf scale=W:H resizes video to a target width and height in pixels. It's how a raw high-resolution export gets turned into a smaller version for the web, e.g. downscaling a 1080p source to 720p.",
-    "syntax": "ffmpeg -i <input> -vf scale=<width>:<height> <output>",
+    "description": "-vf scale=W:H resizes video to a target width and height in pixels. It's how a raw high-resolution export gets turned into a smaller version for the web, e.g. downscaling a 1080p source to 720p or 360p. It combines with -ss/-t (covered in the previous lesson) to both resize and trim a clip in the same call.",
+    "syntax": "ffmpeg -i <input> -vf scale=<width>:<height> [-ss <sec>] [-t <sec>] <output>",
     "flags": [{ "flag": "-vf scale=W:H", "desc": "resize video to width W, height H" }],
     "examples": [
-      { "cmd": "ffmpeg -i clip.mov -vf scale=1280:720 clip-720p.mp4", "output": "ffmpeg: wrote clip-720p.mp4 (h264, 8000kbps, 1280x720, 00:03:12)", "note": "scale=1280:720 downscales to 720p" }
+      { "cmd": "ffmpeg -i clip.mov -vf scale=1280:720 clip-720p.mp4", "output": "ffmpeg: wrote clip-720p.mp4 (h264, 8000kbps, 1280x720, 00:03:12)", "note": "scale=1280:720 downscales to 720p" },
+      { "cmd": "ffmpeg -i clip.mov -vf scale=640:360 -t 30 clip-preview.mp4", "output": "ffmpeg: wrote clip-preview.mp4 (h264, 8000kbps, 640x360, 00:00:30)", "note": "resize AND trim in one call" }
     ]
   },
   "exercises": [
@@ -21,6 +22,43 @@
       "startCwd": [],
       "hints": ["-vf scale=<width>:<height> goes between -i <input> and the output file", "ffmpeg -i raw-interview.mov -vf scale=1280:720 interview-720p.mp4"],
       "criteria": [{ "id": "scaled", "label": "Create interview-720p.mp4 at 1280x720", "check": { "type": "state", "predicate": "fileContains", "path": "interview-720p.mp4", "substring": "1280x720" } }]
+    },
+    {
+      "id": "ffmpeg-scale-2",
+      "title": "A smaller target resolution",
+      "task": "Convert raw-interview.mov to small.mp4, scaled all the way down to 640:360.",
+      "startFs": {
+        "raw-interview.mov": { "content": "video file", "meta": { "kind": "video", "durationSec": 192, "codec": "h264", "resolution": "1920x1080", "bitrateKbps": 8000 } }
+      },
+      "startCwd": [],
+      "hints": ["Same flag, a different width and height", "ffmpeg -i raw-interview.mov -vf scale=640:360 small.mp4"],
+      "criteria": [{ "id": "scaled-small", "label": "Create small.mp4 at 640x360", "check": { "type": "state", "predicate": "fileContains", "path": "small.mp4", "substring": "640x360" } }]
+    },
+    {
+      "id": "ffmpeg-scale-3",
+      "title": "Scale and trim together",
+      "task": "Convert raw-interview.mov to clip360.mp4: scale it to 640:360, skip the first 30 seconds, and keep the next 60.",
+      "startFs": {
+        "raw-interview.mov": { "content": "video file", "meta": { "kind": "video", "durationSec": 192, "codec": "h264", "resolution": "1920x1080", "bitrateKbps": 8000 } }
+      },
+      "startCwd": [],
+      "hints": ["-vf, -ss, and -t can all appear in the same call", "ffmpeg -i raw-interview.mov -vf scale=640:360 -ss 30 -t 60 clip360.mp4"],
+      "criteria": [
+        { "id": "scaled", "label": "clip360.mp4 is 640x360", "check": { "type": "state", "predicate": "fileContains", "path": "clip360.mp4", "substring": "640x360" } },
+        { "id": "trimmed", "label": "clip360.mp4 is 1 minute long", "check": { "type": "state", "predicate": "fileContains", "path": "clip360.mp4", "substring": "00:01:00" } }
+      ]
+    },
+    {
+      "id": "ffmpeg-scale-4",
+      "title": "Put it together: scale, then verify with ffprobe",
+      "task": "Convert raw-interview.mov to clip720.mp4, scaled to 1280:720, then run ffprobe on clip720.mp4 to confirm the resolution.",
+      "startFs": {
+        "raw-interview.mov": { "content": "video file", "meta": { "kind": "video", "durationSec": 192, "codec": "h264", "resolution": "1920x1080", "bitrateKbps": 8000 } }
+      },
+      "startCwd": [],
+      "hints": ["Convert first, then run ffprobe on the new file", "ffmpeg -i raw-interview.mov -vf scale=1280:720 clip720.mp4, then ffprobe clip720.mp4"],
+      "criteria": [{ "id": "probed", "label": "ffprobe confirms 1280x720", "check": { "type": "matchOutput", "expected": "h264, 8000kbps, 1280x720, 00:03:12" } }],
+      "expectedOutput": "h264, 8000kbps, 1280x720, 00:03:12"
     }
   ]
 }

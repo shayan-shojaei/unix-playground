@@ -3,11 +3,12 @@
   "course": "ffmpeg",
   "guide": {
     "concept": "convert",
-    "description": "ffmpeg reads a media file and writes a new one in whatever format the output filename's extension names — pick .mp3 and you get an mp3, pick .mp4 and you get an h264 video. It's the tool you reach for first any time audio or video needs to change shape before it goes somewhere else.",
+    "description": "ffmpeg reads a media file and writes a new one in whatever format the output filename's extension names — pick .mp3 and you get an mp3, pick .mp4 or .webm and you get a video, pick .aac and you get compressed audio. It's the tool you reach for first any time audio or video needs to change shape before it goes somewhere else. Flags like -b:a and -vf (covered in later lessons) can be combined with a format change in the same call.",
     "syntax": "ffmpeg -i <input> <output>",
     "flags": [{ "flag": "-i <file>", "desc": "the input media file to read" }],
     "examples": [
-      { "cmd": "ffmpeg -i podcast.wav podcast.mp3", "output": "ffmpeg: wrote podcast.mp3 (mp3, 1411kbps, 00:30:40)", "note": "the output extension picks the codec" }
+      { "cmd": "ffmpeg -i podcast.wav podcast.mp3", "output": "ffmpeg: wrote podcast.mp3 (mp3, 1411kbps, 00:30:40)", "note": "the output extension picks the codec" },
+      { "cmd": "ffmpeg -i clip.mov clip.webm", "output": "ffmpeg: wrote clip.webm (vp9, 8000kbps, 1920x1080, 00:03:12)", "note": ".webm picks the vp9 codec" }
     ]
   },
   "exercises": [
@@ -34,6 +35,33 @@
       "startCwd": [],
       "hints": ["Same pattern: ffmpeg -i <input> <output>", "ffmpeg -i raw-interview.mov raw-interview.mp4"],
       "criteria": [{ "id": "converted", "label": "Create raw-interview.mp4 from the mov", "check": { "type": "state", "predicate": "fileContains", "path": "raw-interview.mp4", "substring": "h264" } }]
+    },
+    {
+      "id": "ffmpeg-convert-3",
+      "title": "Convert to a different format: webm",
+      "task": "Convert raw-interview.mov to raw-interview.webm — a different video format than mp4, picking up the vp9 codec.",
+      "startFs": {
+        "raw-interview.mov": { "content": "video file", "meta": { "kind": "video", "durationSec": 192, "codec": "h264", "resolution": "1920x1080", "bitrateKbps": 8000 } },
+        "podcast-ep1.wav": { "content": "audio file", "meta": { "kind": "audio", "durationSec": 1840, "codec": "pcm", "bitrateKbps": 1411 } }
+      },
+      "startCwd": [],
+      "hints": ["The extension alone picks the codec — same command shape as before, different output name", "ffmpeg -i raw-interview.mov raw-interview.webm"],
+      "criteria": [{ "id": "webm", "label": "Create raw-interview.webm with the vp9 codec", "check": { "type": "state", "predicate": "fileContains", "path": "raw-interview.webm", "substring": "vp9" } }]
+    },
+    {
+      "id": "ffmpeg-convert-4",
+      "title": "Combine a format change with another flag",
+      "task": "Convert raw-interview.mov to compact.mp4, scaling it to 1280:720 (with -vf) AND setting the audio bitrate to 4000k (with -b:a), all in one ffmpeg call.",
+      "startFs": {
+        "raw-interview.mov": { "content": "video file", "meta": { "kind": "video", "durationSec": 192, "codec": "h264", "resolution": "1920x1080", "bitrateKbps": 8000 } },
+        "podcast-ep1.wav": { "content": "audio file", "meta": { "kind": "audio", "durationSec": 1840, "codec": "pcm", "bitrateKbps": 1411 } }
+      },
+      "startCwd": [],
+      "hints": ["Flags can stack in any order between -i <input> and the output file", "ffmpeg -i raw-interview.mov -vf scale=1280:720 -b:a 4000k compact.mp4"],
+      "criteria": [
+        { "id": "scaled", "label": "compact.mp4 is scaled to 1280x720", "check": { "type": "state", "predicate": "fileContains", "path": "compact.mp4", "substring": "1280x720" } },
+        { "id": "bitrate", "label": "compact.mp4 has a 4000kbps bitrate", "check": { "type": "state", "predicate": "fileContains", "path": "compact.mp4", "substring": "4000kbps" } }
+      ]
     }
   ]
 }

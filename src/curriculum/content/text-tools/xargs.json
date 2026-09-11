@@ -1,0 +1,67 @@
+{
+  "concept": "xargs",
+  "course": "text-tools",
+  "guide": {
+    "concept": "xargs",
+    "description": "xargs <cmd> takes whitespace-separated tokens from stdin and runs <cmd> once per token, appending that token as an extra argument each time. It's how you turn a list of things (produced by any earlier command in this course) into repeated invocations of another command — the capstone move that ties a pipeline of text-processing tools to command execution.",
+    "syntax": "cmd | xargs <cmd2> [fixed-args...]",
+    "flags": [],
+    "examples": [
+      { "cmd": "echo a b | xargs echo got:", "output": "got: a\ngot: b", "note": "echo got: runs once per token, with the token appended" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t1-xargs-1",
+      "title": "One command per token",
+      "task": "Echo 'ada grace alan', then pipe it into xargs echo user: so each name is printed on its own line, prefixed with 'user:'.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["xargs runs the command once per whitespace-separated token from stdin", "echo ada grace alan | xargs echo user:"],
+      "criteria": [{ "id": "one-per-token", "label": "One echo per name, prefixed with user:", "check": { "type": "matchOutput", "expected": "user: ada\nuser: grace\nuser: alan" } }],
+      "expectedOutput": "user: ada\nuser: grace\nuser: alan"
+    },
+    {
+      "id": "t1-xargs-2",
+      "title": "Chain cut into xargs",
+      "task": "Pull the id column (1st field) from users.csv with cut, then pipe it into xargs echo id: — notice the header row 'id' gets prefixed too, since xargs doesn't know it's special.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["cut -d, -f1 users.csv gives you the id column, one value per line, including the header", "Pipe that into xargs echo id:"],
+      "criteria": [{ "id": "chained", "label": "Every id, including the header, prefixed with id:", "check": { "type": "matchOutput", "expected": "id: id\nid: 1\nid: 2\nid: 3" } }],
+      "expectedOutput": "id: id\nid: 1\nid: 2\nid: 3"
+    },
+    {
+      "id": "t1-xargs-3",
+      "title": "Chain three commands into xargs",
+      "task": "Pull the status codes from access.log with awk, sort them with -u to drop duplicates, then pipe the unique codes into xargs echo status:.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["awk '{print $1}' access.log | sort -u gives the unique codes, same as the sort lesson", "Pipe that into xargs echo status:"],
+      "criteria": [{ "id": "unique-status", "label": "Each unique status code, prefixed with status:", "check": { "type": "matchOutput", "expected": "status: 200\nstatus: 404\nstatus: 500" } }],
+      "expectedOutput": "status: 200\nstatus: 404\nstatus: 500"
+    },
+    {
+      "id": "t1-xargs-4",
+      "title": "Put it together: grep, awk, xargs",
+      "task": "Grep for the 404 lines in access.log, pull the HTTP method (2nd field) with awk, then pipe that into xargs echo method:.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["Chain grep, awk, and xargs — all three you already know", "grep 404 access.log | awk '{print $2}' | xargs echo method:"],
+      "criteria": [{ "id": "grep-awk-xargs", "label": "GET printed twice, once per 404 line, prefixed with method:", "check": { "type": "matchOutput", "expected": "method: GET\nmethod: GET" } }],
+      "expectedOutput": "method: GET\nmethod: GET"
+    }
+  ]
+}

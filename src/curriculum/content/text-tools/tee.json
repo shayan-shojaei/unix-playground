@@ -1,0 +1,77 @@
+{
+  "concept": "tee",
+  "course": "text-tools",
+  "guide": {
+    "concept": "tee",
+    "description": "tee <file> writes its stdin to a file AND passes it straight through as stdout — unlike >, which sends output only to the file and shows you nothing. That makes tee useful mid-pipeline: you can save an intermediate result to disk while still piping it into the next command. Like >>, tee -a appends instead of overwriting.",
+    "syntax": "cmd | tee <file>    |    cmd | tee -a <file>",
+    "flags": [{ "flag": "-a", "desc": "append to the file instead of overwriting it" }],
+    "examples": [
+      { "cmd": "echo hi | tee out.txt", "output": "hi", "note": "prints hi AND writes it to out.txt" },
+      { "cmd": "cat access.log | tee copy.log | wc -l", "output": "6", "note": "copy.log gets the full file, wc -l still counts lines from the same stream" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t1-tee-1",
+      "title": "See it and save it",
+      "task": "Grep for admin rows in users.csv and pipe the result into tee, saving it to admins-new.csv while also printing it.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["grep admin users.csv finds the right rows, same as the redirect lesson", "Pipe that into tee admins-new.csv instead of using >"],
+      "criteria": [
+        { "id": "printed", "label": "Output is printed to the terminal", "check": { "type": "matchOutput", "expected": "1,ada,admin\n3,alan,admin" } },
+        { "id": "saved", "label": "admins-new.csv also contains it", "check": { "type": "state", "predicate": "fileContains", "path": "admins-new.csv", "substring": "1,ada,admin" } }
+      ]
+    },
+    {
+      "id": "t1-tee-2",
+      "title": "Append with -a",
+      "task": "admins.csv already has ada's and alan's rows. Grep for grace's row and pipe it into tee -a admins.csv to append it WITHOUT losing what's already there.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" },
+        "admins.csv": { "content": "1,ada,admin\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["Plain tee would overwrite admins.csv and lose the existing rows — use -a", "grep grace users.csv | tee -a admins.csv"],
+      "criteria": [
+        { "id": "printed", "label": "grace's row is printed", "check": { "type": "matchOutput", "expected": "2,grace,user" } },
+        { "id": "appended", "label": "admins.csv keeps ada and alan, and now has grace too", "check": { "type": "state", "predicate": "fileContains", "path": "admins.csv", "substring": "1,ada,admin\n3,alan,admin\n2,grace,user" } }
+      ]
+    },
+    {
+      "id": "t1-tee-3",
+      "title": "tee mid-pipeline",
+      "task": "Pipe the full contents of access.log through tee, saving a copy to full.log, then continue the pipeline into wc -l to count its lines.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["tee sits in the MIDDLE of the pipe: cmd | tee <file> | next-cmd", "cat access.log | tee full.log | wc -l"],
+      "criteria": [
+        { "id": "count", "label": "wc -l still sees the full stream and counts 6", "check": { "type": "matchOutput", "expected": "6" } },
+        { "id": "saved", "label": "full.log has a copy of the whole file", "check": { "type": "state", "predicate": "fileContains", "path": "full.log", "substring": "old-page" } }
+      ]
+    },
+    {
+      "id": "t1-tee-4",
+      "title": "Put it together: grep, tee, wc",
+      "task": "Grep for 200 lines in access.log, tee them to matched.log, then count them with wc -l.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["Chain three commands you already know with pipes", "grep 200 access.log | tee matched.log | wc -l"],
+      "criteria": [
+        { "id": "count", "label": "wc -l counts 3 matching lines", "check": { "type": "matchOutput", "expected": "3" } },
+        { "id": "saved", "label": "matched.log holds only the 200 lines", "check": { "type": "state", "predicate": "fileContains", "path": "matched.log", "substring": "200 GET /about" } }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "concept": "diff",
+  "course": "text-tools",
+  "guide": {
+    "concept": "diff",
+    "description": "diff <file1> <file2> compares two files line by line and reports what's different. A line printed with '< ' exists in file1 but not file2; a line printed with '> ' exists in file2 but not file1. Lines identical in both files print nothing — diff only shows what changed. The order of the two files matters: swap them and every < becomes > and vice versa.",
+    "syntax": "diff <file1> <file2>",
+    "flags": [],
+    "examples": [
+      { "cmd": "diff old.txt new.txt", "output": "< removed line\n> added line", "note": "removed-from-old lines get <, added-in-new lines get >" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t1-diff-1",
+      "title": "A line only in the second file",
+      "task": "Compare roster.csv and roster-v2.csv with diff. roster-v2.csv has one extra row at the end.",
+      "startFs": {
+        "roster.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin\n4,mia,user" },
+        "roster-v2.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin\n4,mia,user\n5,leo,user" }
+      },
+      "startCwd": [],
+      "hints": ["diff <file1> <file2> — the file that HAS the extra row is file2", "diff roster.csv roster-v2.csv"],
+      "criteria": [{ "id": "added", "label": "The extra row prints with >", "check": { "type": "matchOutput", "expected": "> 5,leo,user" } }],
+      "expectedOutput": "> 5,leo,user"
+    },
+    {
+      "id": "t1-diff-2",
+      "title": "A line only in the first file",
+      "task": "Compare roster.csv and roster-v3.csv with diff. roster-v3.csv is missing alan's row.",
+      "startFs": {
+        "roster.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin\n4,mia,user" },
+        "roster-v3.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n4,mia,user" }
+      },
+      "startCwd": [],
+      "hints": ["The missing row belongs to file1, so it prints with <", "diff roster.csv roster-v3.csv"],
+      "criteria": [{ "id": "removed", "label": "The missing row prints with <", "check": { "type": "matchOutput", "expected": "< 3,alan,admin" } }],
+      "expectedOutput": "< 3,alan,admin"
+    },
+    {
+      "id": "t1-diff-3",
+      "title": "Additions and removals together",
+      "task": "Compare roster.csv and roster-v4.csv with diff. roster-v4.csv changed grace's role, dropped mia, and added leo.",
+      "startFs": {
+        "roster.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin\n4,mia,user" },
+        "roster-v4.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,admin\n3,alan,admin\n5,leo,user" }
+      },
+      "startCwd": [],
+      "hints": ["A changed row shows up as one < line (the old version) and one > line (the new version), since the text itself differs", "diff roster.csv roster-v4.csv"],
+      "criteria": [{ "id": "mixed", "label": "Removed/changed lines with <, added/changed lines with >", "check": { "type": "matchOutput", "expected": "< 2,grace,user\n< 4,mia,user\n> 2,grace,admin\n> 5,leo,user" } }],
+      "expectedOutput": "< 2,grace,user\n< 4,mia,user\n> 2,grace,admin\n> 5,leo,user"
+    },
+    {
+      "id": "t1-diff-4",
+      "title": "Argument order flips the direction",
+      "task": "Run the same comparison as before but with the arguments swapped: diff roster-v4.csv roster.csv. Notice every < and > flips compared to the last exercise.",
+      "startFs": {
+        "roster.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin\n4,mia,user" },
+        "roster-v4.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,admin\n3,alan,admin\n5,leo,user" }
+      },
+      "startCwd": [],
+      "hints": ["Same two files, reversed order: diff roster-v4.csv roster.csv", "Whatever printed with < last time now prints with >, and vice versa"],
+      "criteria": [{ "id": "flipped", "label": "Direction is flipped from the previous exercise", "check": { "type": "matchOutput", "expected": "< 2,grace,admin\n< 5,leo,user\n> 2,grace,user\n> 4,mia,user" } }],
+      "expectedOutput": "< 2,grace,admin\n< 5,leo,user\n> 2,grace,user\n> 4,mia,user"
+    }
+  ]
+}

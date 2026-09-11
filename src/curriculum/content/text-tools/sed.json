@@ -3,12 +3,18 @@
   "course": "text-tools",
   "guide": {
     "concept": "sed",
-    "description": "sed 's/pattern/replacement/' rewrites matching text on every line. By default it only replaces the FIRST match per line — add a trailing g (global) to replace every match on the line instead. Matching is case-sensitive, just like grep.",
-    "syntax": "sed 's/pattern/replacement/[g]' [file]",
-    "flags": [{ "flag": "g", "desc": "(inside the expression, not a real flag) replace every match per line, not just the first" }],
+    "description": "sed 's/pattern/replacement/' rewrites matching text on every line. By default it only replaces the FIRST match per line — add a trailing g (global) to replace every match on the line instead, or i to match case-insensitively (they can combine as gi). sed can also act on whole lines by number instead of substituting text: 'Nd' deletes line N (or 'N,Md' deletes a range), and multiple edits can be chained in one call with repeated -e. Matching is otherwise case-sensitive, just like grep.",
+    "syntax": "sed 's/pattern/replacement/[gi]' [file]    |    sed 'Nd' [file]    |    sed -e expr1 -e expr2 [file]",
+    "flags": [
+      { "flag": "g", "desc": "(inside the expression, not a real flag) replace every match per line, not just the first" },
+      { "flag": "i", "desc": "(inside the expression) match case-insensitively — combine with g as gi" },
+      { "flag": "Nd / N,Md", "desc": "as the whole expression: delete line N, or the range N through M" },
+      { "flag": "-e <expr>", "desc": "give another expression — repeat -e to chain several edits in one sed call" }
+    ],
     "examples": [
       { "cmd": "sed 's/s/S/' access.log", "output": "200 GET /home\n404 GET /miSsing\n200 GET /about\n500 GET /api/uSers\n200 GET /home\n404 GET /old-page", "note": "only the FIRST s on a line is replaced" },
-      { "cmd": "sed 's/s/S/g' access.log", "output": "200 GET /home\n404 GET /miSSing\n200 GET /about\n500 GET /api/uSerS\n200 GET /home\n404 GET /old-page", "note": "g catches every s on the line" }
+      { "cmd": "sed 's/s/S/g' access.log", "output": "200 GET /home\n404 GET /miSSing\n200 GET /about\n500 GET /api/uSerS\n200 GET /home\n404 GET /old-page", "note": "g catches every s on the line" },
+      { "cmd": "sed '1d' users.csv", "output": "1,ada,admin\n2,grace,user\n3,alan,admin", "note": "line 1 (the header) is dropped" }
     ]
   },
   "exercises": [
@@ -37,6 +43,32 @@
       "hints": ["Add g right after the closing slash to replace every match, not just the first", "Same substitution as the last lesson, just with g appended"],
       "criteria": [{ "id": "all-s", "label": "Replace every s per line", "check": { "type": "matchOutput", "expected": "200 GET /home\n404 GET /miSSing\n200 GET /about\n500 GET /api/uSerS\n200 GET /home\n404 GET /old-page" } }],
       "expectedOutput": "200 GET /home\n404 GET /miSSing\n200 GET /about\n500 GET /api/uSerS\n200 GET /home\n404 GET /old-page"
+    },
+    {
+      "id": "t1-sed-3",
+      "title": "Chain two edits with -e",
+      "task": "On users.csv, chain two edits in one sed call with -e: replace the first comma on each line with a space, and replace 'admin' with 'ADMIN'.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["Repeat -e once per edit: sed -e 'expr1' -e 'expr2' <file>", "sed -e 's/,/ /' -e 's/admin/ADMIN/' users.csv"],
+      "criteria": [{ "id": "chained-edits", "label": "Both edits applied, in order", "check": { "type": "matchOutput", "expected": "id name,role\n1 ada,ADMIN\n2 grace,user\n3 alan,ADMIN" } }],
+      "expectedOutput": "id name,role\n1 ada,ADMIN\n2 grace,user\n3 alan,ADMIN"
+    },
+    {
+      "id": "t1-sed-4",
+      "title": "Delete a line by number",
+      "task": "Delete the header line (line 1) from users.csv using sed's line-addressed delete.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["The whole expression is just a line number followed by d — no s/// involved", "sed '1d' users.csv"],
+      "criteria": [{ "id": "header-deleted", "label": "Header line is gone, data rows remain", "check": { "type": "matchOutput", "expected": "1,ada,admin\n2,grace,user\n3,alan,admin" } }],
+      "expectedOutput": "1,ada,admin\n2,grace,user\n3,alan,admin"
     }
   ]
 }

@@ -1,0 +1,46 @@
+{
+  "concept": "printf",
+  "course": "text-tools",
+  "guide": {
+    "concept": "printf",
+    "description": "printf '<format>' <args...> builds output from a template instead of just joining words like echo does. %s substitutes the next argument as-is, %d substitutes it as an integer, and a literal \\n inside the format string becomes a real newline — useful for putting multiple values on separate lines out of a single call.",
+    "syntax": "printf '<format>' [args...]",
+    "flags": [
+      { "flag": "%s", "desc": "substitute the next argument as a string" },
+      { "flag": "%d", "desc": "substitute the next argument as an integer" },
+      { "flag": "\\n", "desc": "a literal newline inside the format string" }
+    ],
+    "examples": [
+      { "cmd": "printf '%s\\n' ready", "output": "ready", "note": "one %s, one substitution" },
+      { "cmd": "printf '%s: %d' items 5", "output": "items: 5", "note": "%s and %d in the same format string" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "t1-printf-1",
+      "title": "Two substitutions, one format",
+      "task": "Use printf with the format '%s\\n%s' to print 'ada' on one line and 'admin' on the next.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["The format string needs two %s, one per argument", "printf '%s\\n%s' ada admin"],
+      "criteria": [{ "id": "two-s", "label": "Prints ada then admin on the next line", "check": { "type": "matchOutput", "expected": "ada\nadmin" } }],
+      "expectedOutput": "ada\nadmin"
+    },
+    {
+      "id": "t1-printf-2",
+      "title": "Mixing %s and %d",
+      "task": "Use printf with the format '%s: %d' to print 'count: 3'.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["%s takes the label, %d takes the number", "printf '%s: %d' count 3"],
+      "criteria": [{ "id": "mixed", "label": "Prints count: 3", "check": { "type": "matchOutput", "expected": "count: 3" } }],
+      "expectedOutput": "count: 3"
+    }
+  ]
+}

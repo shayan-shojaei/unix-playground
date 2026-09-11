@@ -5,6 +5,7 @@ interface CurriculumSidebarProps {
   lessons: LessonInstance[];
   completed: Set<string>;
   currentId: string;
+  onSelect: (id: string) => void;
 }
 
 function groupByConcept(lessons: LessonInstance[]): { concept: string; lessons: LessonInstance[] }[] {
@@ -17,7 +18,7 @@ function groupByConcept(lessons: LessonInstance[]): { concept: string; lessons: 
   return groups;
 }
 
-export default function CurriculumSidebar({ course, lessons, completed, currentId }: CurriculumSidebarProps) {
+export default function CurriculumSidebar({ course, lessons, completed, currentId, onSelect }: CurriculumSidebarProps) {
   const done = lessons.filter((l) => completed.has(l.id)).length;
   return (
     <nav className="curriculum">
@@ -34,8 +35,10 @@ export default function CurriculumSidebar({ course, lessons, completed, currentI
                 const status = completed.has(lesson.id) ? 'done' : lesson.id === currentId ? 'current' : 'upcoming';
                 return (
                   <li className={`curriculum-item curriculum-${status}`} key={lesson.id}>
-                    <span className="curriculum-dot" aria-hidden="true" />
-                    {lesson.title}
+                    <button type="button" className="curriculum-item-button" onClick={() => onSelect(lesson.id)}>
+                      <span className="curriculum-dot" aria-hidden="true" />
+                      {lesson.title}
+                    </button>
                   </li>
                 );
               })}

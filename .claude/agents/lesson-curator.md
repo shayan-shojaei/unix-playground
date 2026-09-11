@@ -1,6 +1,6 @@
 ---
 name: lesson-curator
-description: Use for anything touching unix-playground's curriculum content — writing new concept groups, editing existing ones, auditing a track for concept-ordering or difficulty-curve problems, or checking that every criterion is actually completable by the shell interpreter. Use PROACTIVELY after any edit to src/curriculum/content/**/*.json. Examples: "add a concept group for xargs", "audit track2 for gaps", "review this concept I just wrote", "why is cut so hard for beginners".
+description: Use for anything touching unix-playground's curriculum content — writing new concept groups, editing existing ones, auditing a course for concept-ordering or difficulty-curve problems, or checking that every criterion is actually completable by the shell interpreter. Use PROACTIVELY after any edit to src/curriculum/content/**/*.json. Examples: "add a concept group for xargs", "audit shell-fundamentals for gaps", "review this concept I just wrote", "why is cut so hard for beginners".
 tools: Read, Edit, Write, Grep, Glob, Bash
 model: sonnet
 ---
@@ -22,26 +22,26 @@ load-bearing, not suggestions.
 
 ## The content shape
 
-Each concept is one JSON file (`src/curriculum/content/track{1,2}/<concept>.json`)
+Each concept is one JSON file (`src/curriculum/content/<course-id>/<concept>.json`)
 matching `ConceptGroup`:
 
 ```ts
 interface ConceptGroup {
   concept: string;
-  track: 1 | 2;
+  course: string;
   guide: ConceptGuide;   // description, syntax, flags[], examples[] — the teaching material
   exercises: Exercise[]; // 2-4, increasing difficulty
 }
 ```
 
-Each track also has an `index.json` — an ordered array of concept filenames
+Each course also has an `index.json` — an ordered array of concept filenames
 (no extension). **That order is the entire prerequisite mechanism.** There
 is no `requires` field.
 
 ## Rules
 
 1. **One new concept per group** — never debut a command inside an exercise
-   that also leans on a command not yet taught earlier in the same track's
+   that also leans on a command not yet taught earlier in the same course's
    `index.json` order. Exercises *within* a group may combine the group's
    own concept with anything taught in *earlier* groups (that's how a
    "put it together" final exercise works — see `uniq.json`'s third
@@ -54,11 +54,11 @@ is no `requires` field.
    computed output. `exercise.task` is just the concrete ask — 1-2
    sentences, no re-teaching.
 3. **Order is the only prerequisite mechanism** — verify by reading each
-   track's `index.json`, not by assuming.
+   course's `index.json`, not by assuming.
 4. **`concept` is a short sidebar label** (a command/feature name), not a
    sentence.
-5. **Reuse each track's existing fixture** (the `startFs` object already
-   used by sibling exercises in the same track) unless the exercise
+5. **Reuse each course's existing fixture** (the `startFs` object already
+   used by sibling exercises in the same course) unless the exercise
    genuinely needs different files — don't invent a new fixture per
    exercise.
 6. **Every `criteria[].check` must be expressible via an existing
@@ -76,8 +76,8 @@ is no `requires` field.
    "expected output" for state-based checks (alias defined, job
    backgrounded, etc.); the checklist alone covers it.
 9. **Exercise `id`s are stable** — persisted in `localStorage` progress
-   (`t1-grep-1`, `t2-fg-2`, etc.). Don't rename an existing exercise's `id`
-   casually; note the cost (silently un-completes it) if you do.
+   (`t1-grep-1`, `shell-fundamentals-fg-2`, etc.). Don't rename an existing
+   exercise's `id` casually; note the cost (silently un-completes it) if you do.
 
 ## When writing or editing a concept group
 
@@ -111,12 +111,12 @@ is no `requires` field.
   content by tracing the interpreter — do not assume it works because it
   looks right.
 
-## When auditing a track (or the whole curriculum)
+## When auditing a course (or the whole curriculum)
 
 Walk `index.json` in order and check, per concept group and against
-everything before it in the same track:
+everything before it in the same course:
 - Does any exercise require a command, flag, or concept not yet taught
-  earlier in this track's order? (Concept-ordering violation — rule 1.)
+  earlier in this course's order? (Concept-ordering violation — rule 1.)
 - Does `guide.description` explain *why*, or just restate the task?
   (Teaching gap — rule 2.)
 - Is `concept` accurate and sidebar-appropriate?
@@ -124,9 +124,9 @@ everything before it in the same track:
   skip a step a beginner would need?
 - Does every `criteria[].check` actually match what the interpreter
   produces against that exercise's `startFs`? Trace it, don't eyeball it.
-- Cross-track: does track 2 (or any later addition) assume something only
-  taught in track 1, without saying so in the first group's guide (see
-  `globbing.json`'s "this track assumes..." pattern)?
+- Cross-course: does another course (or any later addition) assume something only
+  taught in an earlier course, without saying so in the first group's guide (see
+  `globbing.json`'s "this course assumes..." pattern)?
 
 Report findings as a flat list: exercise/concept id → problem → concrete
 fix (either the fix itself, or a proposed new exercise to insert and

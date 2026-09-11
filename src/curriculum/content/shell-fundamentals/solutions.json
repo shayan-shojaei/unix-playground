@@ -1,0 +1,18 @@
+{
+  "t2-globbing-1": "head *.txt",
+  "t2-globbing-2": "wc -l *.csv",
+  "shell-fundamentals-find-1": "find .",
+  "shell-fundamentals-find-2": "find . -name '*.log'",
+  "shell-fundamentals-find-3": "find . -type d",
+  "shell-fundamentals-find-4": "find src -type f -name '*.js'",
+  "t2-alias-1": "alias ll=ls",
+  "t2-alias-2": "alias h=history",
+  "t2-history-1": "history",
+  "t2-history-2": ["pwd", "history"],
+  "t2-background-1": "sleep 5 &",
+  "t2-background-2": ["sleep 3 &", "sleep 5 &"],
+  "t2-jobs-1": "jobs",
+  "t2-jobs-2": ["sleep 5 &", "jobs"],
+  "t2-fg-1": ["sleep 5 &", "fg %1"],
+  "t2-fg-2": ["sleep 4 &", "fg"]
+}

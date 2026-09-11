@@ -3,11 +3,16 @@
   "course": "ffmpeg",
   "guide": {
     "concept": "audio-bitrate",
-    "description": "-b:a sets the target audio bitrate — how many kilobits per second the encoded audio uses. Lower bitrates make smaller files at the cost of quality; podcasts and voice are usually fine well below music-quality bitrates.",
-    "syntax": "ffmpeg -i <input> -b:a <rate>k <output>",
-    "flags": [{ "flag": "-b:a <rate>k", "desc": "target audio bitrate in kbps, e.g. 128k" }],
+    "description": "-b:a sets the target audio bitrate — how many kilobits per second the encoded audio uses. Lower bitrates make smaller files at the cost of quality; podcasts and voice are usually fine well below music-quality bitrates. -b:a combines with -ss (skip this many seconds before starting) and -t (stop after this many more seconds) to trim a clip down to a highlight while re-encoding it.",
+    "syntax": "ffmpeg -i <input> -b:a <rate>k [-ss <sec>] [-t <sec>] <output>",
+    "flags": [
+      { "flag": "-b:a <rate>k", "desc": "target audio bitrate in kbps, e.g. 128k" },
+      { "flag": "-ss <sec>", "desc": "skip this many seconds from the start before the output begins" },
+      { "flag": "-t <sec>", "desc": "stop the output after this many more seconds" }
+    ],
     "examples": [
-      { "cmd": "ffmpeg -i podcast.wav -b:a 96k podcast.mp3", "output": "ffmpeg: wrote podcast.mp3 (mp3, 96kbps, 00:30:40)", "note": "96k is a common speech-quality bitrate" }
+      { "cmd": "ffmpeg -i podcast.wav -b:a 96k podcast.mp3", "output": "ffmpeg: wrote podcast.mp3 (mp3, 96kbps, 00:30:40)", "note": "96k is a common speech-quality bitrate" },
+      { "cmd": "ffmpeg -i podcast.wav -ss 10 -t 60 -b:a 96k clip.mp3", "output": "ffmpeg: wrote clip.mp3 (mp3, 96kbps, 00:01:00)", "note": "skips the first 10s, keeps the next 60s" }
     ]
   },
   "exercises": [
@@ -21,6 +26,46 @@
       "startCwd": [],
       "hints": ["-b:a <rate>k goes between -i <input> and the output file", "ffmpeg -i podcast-ep1.wav -b:a 128k podcast-ep1-128.mp3"],
       "criteria": [{ "id": "bitrate", "label": "Create podcast-ep1-128.mp3 at 128kbps", "check": { "type": "state", "predicate": "fileContains", "path": "podcast-ep1-128.mp3", "substring": "128kbps" } }]
+    },
+    {
+      "id": "ffmpeg-bitrate-2",
+      "title": "Trim and set bitrate together",
+      "task": "Convert podcast-ep1.wav to highlight.mp3: skip the first 10 seconds, keep the next 60 seconds, at a bitrate of 96k.",
+      "startFs": {
+        "podcast-ep1.wav": { "content": "audio file", "meta": { "kind": "audio", "durationSec": 1840, "codec": "pcm", "bitrateKbps": 1411 } }
+      },
+      "startCwd": [],
+      "hints": ["-ss skips seconds from the start, -t caps how long the output runs — both can combine with -b:a", "ffmpeg -i podcast-ep1.wav -ss 10 -t 60 -b:a 96k highlight.mp3"],
+      "criteria": [
+        { "id": "trimmed", "label": "highlight.mp3 is 1 minute long", "check": { "type": "state", "predicate": "fileContains", "path": "highlight.mp3", "substring": "00:01:00" } },
+        { "id": "bitrate", "label": "highlight.mp3 is at 96kbps", "check": { "type": "state", "predicate": "fileContains", "path": "highlight.mp3", "substring": "96kbps" } }
+      ]
+    },
+    {
+      "id": "ffmpeg-bitrate-3",
+      "title": "Trim from the start with -t alone",
+      "task": "Convert podcast-ep1.wav to intro.mp3: keep just the first 120 seconds (no -ss needed since you're starting from the beginning), at a bitrate of 64k.",
+      "startFs": {
+        "podcast-ep1.wav": { "content": "audio file", "meta": { "kind": "audio", "durationSec": 1840, "codec": "pcm", "bitrateKbps": 1411 } }
+      },
+      "startCwd": [],
+      "hints": ["Without -ss, -t alone just caps the output length from the very start", "ffmpeg -i podcast-ep1.wav -t 120 -b:a 64k intro.mp3"],
+      "criteria": [
+        { "id": "trimmed", "label": "intro.mp3 is 2 minutes long", "check": { "type": "state", "predicate": "fileContains", "path": "intro.mp3", "substring": "00:02:00" } },
+        { "id": "bitrate", "label": "intro.mp3 is at 64kbps", "check": { "type": "state", "predicate": "fileContains", "path": "intro.mp3", "substring": "64kbps" } }
+      ]
+    },
+    {
+      "id": "ffmpeg-bitrate-4",
+      "title": "Put it together: convert, then verify with ffprobe",
+      "task": "Convert podcast-ep1.wav to highlight2.mp3 the same way as before (skip 10s, keep 60s, 96k bitrate), then use ffprobe to print its summary and confirm the settings took effect.",
+      "startFs": {
+        "podcast-ep1.wav": { "content": "audio file", "meta": { "kind": "audio", "durationSec": 1840, "codec": "pcm", "bitrateKbps": 1411 } }
+      },
+      "startCwd": [],
+      "hints": ["Convert first, then run ffprobe on the file you just created", "ffmpeg -i podcast-ep1.wav -ss 10 -t 60 -b:a 96k highlight2.mp3, then ffprobe highlight2.mp3"],
+      "criteria": [{ "id": "probed", "label": "ffprobe confirms 96kbps and a 1-minute duration", "check": { "type": "matchOutput", "expected": "mp3, 96kbps, 00:01:00" } }],
+      "expectedOutput": "mp3, 96kbps, 00:01:00"
     }
   ]
 }

@@ -3,14 +3,18 @@
   "course": "text-tools",
   "guide": {
     "concept": "awk",
-    "description": "awk splits each input line into whitespace-separated fields and lets you print any of them by number: $1 is the first field, $2 the second, and so on ($0 means the whole line). It's the tool for pulling one column out of column-shaped text without reaching for a full parser.",
-    "syntax": "awk '{print $N}' [file]",
+    "description": "awk splits each input line into whitespace-separated fields and lets you print any of them by number: $1 is the first field, $2 the second, and so on ($0 means the whole line). Two built-in variables need no field number: NR is the current line's number, and NF is how many fields it has. Putting a /regex/ right before the {...} block restricts it to only run on matching lines — a filter and a field-printer in one command. It's the tool for pulling one column out of column-shaped text without reaching for a full parser.",
+    "syntax": "awk '{print $N}' [file]    |    awk '/regex/{print $N}' [file]",
     "flags": [
-      { "flag": "-F<sep>", "desc": "use <sep> as the field separator instead of whitespace" }
+      { "flag": "-F<sep>", "desc": "use <sep> as the field separator instead of whitespace" },
+      { "flag": "NR", "desc": "the current line's number, usable inside {print ...} like a field" },
+      { "flag": "NF", "desc": "how many fields the current line has" },
+      { "flag": "/regex/{...}", "desc": "only run the block on lines matching regex" }
     ],
     "examples": [
       { "cmd": "awk '{print $1}' access.log", "output": "200\n404\n200\n500\n200\n404", "note": "first field of every line" },
-      { "cmd": "awk '{print $1, $3}' access.log", "output": "200 /home\n404 /missing\n200 /about\n500 /api/users\n200 /home\n404 /old-page", "note": "print multiple fields, comma-separated" }
+      { "cmd": "awk '{print $1, $3}' access.log", "output": "200 /home\n404 /missing\n200 /about\n500 /api/users\n200 /home\n404 /old-page", "note": "print multiple fields, comma-separated" },
+      { "cmd": "awk '/404/{print $3}' access.log", "output": "/missing\n/old-page", "note": "the /404/ filter runs the block only on lines containing 404" }
     ]
   },
   "exercises": [
@@ -52,6 +56,19 @@
       "hints": ["List field numbers separated by a comma to print more than one", "Status code first, then path — in that order"],
       "criteria": [{ "id": "field1and3", "label": "Print $1 and $3 together", "check": { "type": "matchOutput", "expected": "200 /home\n404 /missing\n200 /about\n500 /api/users\n200 /home\n404 /old-page" } }],
       "expectedOutput": "200 /home\n404 /missing\n200 /about\n500 /api/users\n200 /home\n404 /old-page"
+    },
+    {
+      "id": "t1-awk-4",
+      "title": "Filter with /regex/ before printing",
+      "task": "Print just the path ($3) for lines that contain '404', by putting /404/ right before the {print} block.",
+      "startFs": {
+        "access.log": { "content": "200 GET /home\n404 GET /missing\n200 GET /about\n500 GET /api/users\n200 GET /home\n404 GET /old-page" },
+        "users.csv": { "content": "id,name,role\n1,ada,admin\n2,grace,user\n3,alan,admin" }
+      },
+      "startCwd": [],
+      "hints": ["Put the pattern right before the block, no comma or space needed: awk '/pattern/{print $N}'", "awk '/404/{print $3}' access.log"],
+      "criteria": [{ "id": "filtered", "label": "Only 404 lines' paths are printed", "check": { "type": "matchOutput", "expected": "/missing\n/old-page" } }],
+      "expectedOutput": "/missing\n/old-page"
     }
   ]
 }

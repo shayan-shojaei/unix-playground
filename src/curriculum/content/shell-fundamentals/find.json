@@ -1,0 +1,80 @@
+{
+  "concept": "find",
+  "course": "shell-fundamentals",
+  "guide": {
+    "concept": "find",
+    "description": "find [path] walks a directory tree recursively and lists everything it finds — the starting path itself, plus every file and subdirectory underneath, at any depth. On its own it's a recursive ls; add -name to filter by filename (glob-style, so * matches any run of characters) or -type f / -type d to keep only files or only directories. Filters can combine in one call.",
+    "syntax": "find [path]    |    find [path] -name <pattern>    |    find [path] -type f|d",
+    "flags": [
+      { "flag": "-name <pattern>", "desc": "only list entries whose name matches the glob pattern" },
+      { "flag": "-type f", "desc": "only list files" },
+      { "flag": "-type d", "desc": "only list directories" }
+    ],
+    "examples": [
+      { "cmd": "find .", "output": ".\n./config\n./config/app.json\n./logs\n./logs/access.log", "note": "everything under ., at any depth, including . itself" },
+      { "cmd": "find . -name '*.log'", "output": "./logs/access.log\n./logs/error.log", "note": "only names ending in .log, wherever they are" }
+    ]
+  },
+  "exercises": [
+    {
+      "id": "shell-fundamentals-find-1",
+      "title": "List everything recursively",
+      "task": "Run find . to list every file and directory under the current directory, at any depth.",
+      "startFs": {
+        "logs": { "children": { "access.log": { "content": "log data" }, "error.log": { "content": "log data" } } },
+        "config": { "children": { "app.json": { "content": "{}" }, "db.yaml": { "content": "host: localhost" } } },
+        "src": { "children": { "index.js": { "content": "console.log(1)" }, "utils": { "children": { "helpers.js": { "content": "export const x = 1" } } } } },
+        "readme.md": { "content": "hello" }
+      },
+      "startCwd": [],
+      "hints": ["find with just a path and no filter lists everything under it, recursively", "find ."],
+      "criteria": [{ "id": "list-all", "label": "Every file and directory is listed", "check": { "type": "matchOutput", "expected": ".\n./config\n./config/app.json\n./config/db.yaml\n./logs\n./logs/access.log\n./logs/error.log\n./readme.md\n./src\n./src/index.js\n./src/utils\n./src/utils/helpers.js" } }],
+      "expectedOutput": ".\n./config\n./config/app.json\n./config/db.yaml\n./logs\n./logs/access.log\n./logs/error.log\n./readme.md\n./src\n./src/index.js\n./src/utils\n./src/utils/helpers.js"
+    },
+    {
+      "id": "shell-fundamentals-find-2",
+      "title": "Filter by name with -name",
+      "task": "Find every .log file anywhere under the current directory using -name.",
+      "startFs": {
+        "logs": { "children": { "access.log": { "content": "log data" }, "error.log": { "content": "log data" } } },
+        "config": { "children": { "app.json": { "content": "{}" }, "db.yaml": { "content": "host: localhost" } } },
+        "src": { "children": { "index.js": { "content": "console.log(1)" }, "utils": { "children": { "helpers.js": { "content": "export const x = 1" } } } } },
+        "readme.md": { "content": "hello" }
+      },
+      "startCwd": [],
+      "hints": ["-name takes a glob pattern — * matches any run of characters", "find . -name '*.log'"],
+      "criteria": [{ "id": "name-filter", "label": "Only .log files, from any depth", "check": { "type": "matchOutput", "expected": "./logs/access.log\n./logs/error.log" } }],
+      "expectedOutput": "./logs/access.log\n./logs/error.log"
+    },
+    {
+      "id": "shell-fundamentals-find-3",
+      "title": "Filter by type with -type",
+      "task": "List only the directories under the current directory using -type d.",
+      "startFs": {
+        "logs": { "children": { "access.log": { "content": "log data" }, "error.log": { "content": "log data" } } },
+        "config": { "children": { "app.json": { "content": "{}" }, "db.yaml": { "content": "host: localhost" } } },
+        "src": { "children": { "index.js": { "content": "console.log(1)" }, "utils": { "children": { "helpers.js": { "content": "export const x = 1" } } } } },
+        "readme.md": { "content": "hello" }
+      },
+      "startCwd": [],
+      "hints": ["-type d keeps only directories, -type f would keep only files", "find . -type d"],
+      "criteria": [{ "id": "type-filter", "label": "Only directories are listed", "check": { "type": "matchOutput", "expected": ".\n./config\n./logs\n./src\n./src/utils" } }],
+      "expectedOutput": ".\n./config\n./logs\n./src\n./src/utils"
+    },
+    {
+      "id": "shell-fundamentals-find-4",
+      "title": "Combine -type and -name",
+      "task": "Starting from src, find every .js file (not directory) at any depth by combining -type f and -name.",
+      "startFs": {
+        "logs": { "children": { "access.log": { "content": "log data" }, "error.log": { "content": "log data" } } },
+        "config": { "children": { "app.json": { "content": "{}" }, "db.yaml": { "content": "host: localhost" } } },
+        "src": { "children": { "index.js": { "content": "console.log(1)" }, "utils": { "children": { "helpers.js": { "content": "export const x = 1" } } } } },
+        "readme.md": { "content": "hello" }
+      },
+      "startCwd": [],
+      "hints": ["Both filters can appear in the same call, in either order", "find src -type f -name '*.js'"],
+      "criteria": [{ "id": "combined-filter", "label": "Only .js files under src, at any depth", "check": { "type": "matchOutput", "expected": "src/index.js\nsrc/utils/helpers.js" } }],
+      "expectedOutput": "src/index.js\nsrc/utils/helpers.js"
+    }
+  ]
+}

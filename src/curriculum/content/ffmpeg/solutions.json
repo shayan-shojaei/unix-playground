@@ -1,0 +1,18 @@
+{
+  "ffmpeg-convert-1": "ffmpeg -i podcast-ep1.wav podcast-ep1.mp3",
+  "ffmpeg-convert-2": "ffmpeg -i raw-interview.mov raw-interview.mp4",
+  "ffmpeg-convert-3": "ffmpeg -i raw-interview.mov raw-interview.webm",
+  "ffmpeg-convert-4": "ffmpeg -i raw-interview.mov -vf scale=1280:720 -b:a 4000k compact.mp4",
+  "ffmpeg-bitrate-1": "ffmpeg -i podcast-ep1.wav -b:a 128k podcast-ep1-128.mp3",
+  "ffmpeg-bitrate-2": "ffmpeg -i podcast-ep1.wav -ss 10 -t 60 -b:a 96k highlight.mp3",
+  "ffmpeg-bitrate-3": "ffmpeg -i podcast-ep1.wav -t 120 -b:a 64k intro.mp3",
+  "ffmpeg-bitrate-4": ["ffmpeg -i podcast-ep1.wav -ss 10 -t 60 -b:a 96k highlight2.mp3", "ffprobe highlight2.mp3"],
+  "ffmpeg-scale-1": "ffmpeg -i raw-interview.mov -vf scale=1280:720 interview-720p.mp4",
+  "ffmpeg-scale-2": "ffmpeg -i raw-interview.mov -vf scale=640:360 small.mp4",
+  "ffmpeg-scale-3": "ffmpeg -i raw-interview.mov -vf scale=640:360 -ss 30 -t 60 clip360.mp4",
+  "ffmpeg-scale-4": ["ffmpeg -i raw-interview.mov -vf scale=1280:720 clip720.mp4", "ffprobe clip720.mp4"],
+  "ffmpeg-inspect-1": "ffprobe raw-interview.mov",
+  "ffmpeg-inspect-2": "ffprobe podcast-ep1.wav",
+  "ffmpeg-inspect-3": ["ffmpeg -i raw-interview.mov highlight.mp4", "ffprobe highlight.mp4"],
+  "ffmpeg-inspect-4": ["ffmpeg -i raw-interview.mov -t 60 clip.mp4", "ffprobe clip.mp4"]
+}

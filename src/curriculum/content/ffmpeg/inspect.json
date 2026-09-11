@@ -3,25 +3,66 @@
   "course": "ffmpeg",
   "guide": {
     "concept": "inspect",
-    "description": "There's no separate inspection command here — ffmpeg prints a summary of what it wrote, and cat prints that same summary back out of the file whenever you need to check it again later.",
-    "syntax": "cat <output>",
+    "description": "ffprobe <file> prints a summary of a media file's codec, bitrate, resolution (for video), and duration — without converting anything. It works directly on a source file, or on anything ffmpeg has already written, which makes it the tool to reach for right after a convert/scale/trim to confirm the settings actually took effect.",
+    "syntax": "ffprobe <file>",
     "flags": [],
     "examples": [
-      { "cmd": "cat clip-720p.mp4", "output": "h264, 8000kbps, 1280x720, 00:03:12", "note": "codec, bitrate, resolution, duration" }
+      { "cmd": "ffprobe raw-interview.mov", "output": "h264, 8000kbps, 1920x1080, 00:03:12", "note": "probing a source file directly, no conversion involved" },
+      { "cmd": "ffprobe clip-720p.mp4", "output": "h264, 8000kbps, 1280x720, 00:03:12", "note": "probing something ffmpeg already wrote" }
     ]
   },
   "exercises": [
     {
       "id": "ffmpeg-inspect-1",
-      "title": "Convert, then inspect",
-      "task": "Convert raw-interview.mov to highlight.mp4, then use cat to print its summary.",
+      "title": "Probe a video source directly",
+      "task": "Use ffprobe to print raw-interview.mov's summary, with no conversion involved.",
       "startFs": {
-        "raw-interview.mov": { "content": "video file", "meta": { "kind": "video", "durationSec": 192, "codec": "h264", "resolution": "1920x1080", "bitrateKbps": 8000 } }
+        "raw-interview.mov": { "content": "video file", "meta": { "kind": "video", "durationSec": 192, "codec": "h264", "resolution": "1920x1080", "bitrateKbps": 8000 } },
+        "podcast-ep1.wav": { "content": "audio file", "meta": { "kind": "audio", "durationSec": 1840, "codec": "pcm", "bitrateKbps": 1411 } }
       },
       "startCwd": [],
-      "hints": ["First convert with ffmpeg -i raw-interview.mov highlight.mp4", "Then cat highlight.mp4 to see the summary"],
-      "criteria": [{ "id": "inspected", "label": "cat highlight.mp4 prints its summary", "check": { "type": "matchOutput", "expected": "h264, 8000kbps, 1920x1080, 00:03:12" } }],
+      "hints": ["ffprobe reads a file's media metadata directly — no -i, no output file", "ffprobe raw-interview.mov"],
+      "criteria": [{ "id": "probed-video", "label": "Prints raw-interview.mov's summary", "check": { "type": "matchOutput", "expected": "h264, 8000kbps, 1920x1080, 00:03:12" } }],
       "expectedOutput": "h264, 8000kbps, 1920x1080, 00:03:12"
+    },
+    {
+      "id": "ffmpeg-inspect-2",
+      "title": "Probe an audio source",
+      "task": "Use ffprobe to print podcast-ep1.wav's summary.",
+      "startFs": {
+        "raw-interview.mov": { "content": "video file", "meta": { "kind": "video", "durationSec": 192, "codec": "h264", "resolution": "1920x1080", "bitrateKbps": 8000 } },
+        "podcast-ep1.wav": { "content": "audio file", "meta": { "kind": "audio", "durationSec": 1840, "codec": "pcm", "bitrateKbps": 1411 } }
+      },
+      "startCwd": [],
+      "hints": ["Same command shape, a different file", "ffprobe podcast-ep1.wav"],
+      "criteria": [{ "id": "probed-audio", "label": "Prints podcast-ep1.wav's summary — no resolution, since it's audio", "check": { "type": "matchOutput", "expected": "pcm, 1411kbps, 00:30:40" } }],
+      "expectedOutput": "pcm, 1411kbps, 00:30:40"
+    },
+    {
+      "id": "ffmpeg-inspect-3",
+      "title": "Convert, then probe the result",
+      "task": "Convert raw-interview.mov to highlight.mp4, then use ffprobe (not cat) to print its summary.",
+      "startFs": {
+        "raw-interview.mov": { "content": "video file", "meta": { "kind": "video", "durationSec": 192, "codec": "h264", "resolution": "1920x1080", "bitrateKbps": 8000 } },
+        "podcast-ep1.wav": { "content": "audio file", "meta": { "kind": "audio", "durationSec": 1840, "codec": "pcm", "bitrateKbps": 1411 } }
+      },
+      "startCwd": [],
+      "hints": ["First convert with ffmpeg -i raw-interview.mov highlight.mp4", "Then ffprobe highlight.mp4 to see the summary"],
+      "criteria": [{ "id": "inspected", "label": "ffprobe highlight.mp4 prints its summary", "check": { "type": "matchOutput", "expected": "h264, 8000kbps, 1920x1080, 00:03:12" } }],
+      "expectedOutput": "h264, 8000kbps, 1920x1080, 00:03:12"
+    },
+    {
+      "id": "ffmpeg-inspect-4",
+      "title": "Put it together: trim, then probe to confirm",
+      "task": "Convert raw-interview.mov to clip.mp4, keeping only the first 60 seconds with -t, then use ffprobe on clip.mp4 to confirm the new duration.",
+      "startFs": {
+        "raw-interview.mov": { "content": "video file", "meta": { "kind": "video", "durationSec": 192, "codec": "h264", "resolution": "1920x1080", "bitrateKbps": 8000 } },
+        "podcast-ep1.wav": { "content": "audio file", "meta": { "kind": "audio", "durationSec": 1840, "codec": "pcm", "bitrateKbps": 1411 } }
+      },
+      "startCwd": [],
+      "hints": ["-t caps the output at that many seconds from the start", "ffmpeg -i raw-interview.mov -t 60 clip.mp4, then ffprobe clip.mp4"],
+      "criteria": [{ "id": "confirmed", "label": "ffprobe confirms the trimmed 1-minute duration", "check": { "type": "matchOutput", "expected": "h264, 8000kbps, 1920x1080, 00:01:00" } }],
+      "expectedOutput": "h264, 8000kbps, 1920x1080, 00:01:00"
     }
   ]
 }

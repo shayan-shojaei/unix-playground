@@ -1,1 +1,1 @@
-["grep", "pipe-wc", "awk", "sort", "uniq", "sed", "cut", "redirect"]
+["grep", "pipe-wc", "awk", "sort", "uniq", "sed", "cut", "tr", "printf", "diff", "redirect", "tee", "xargs"]
